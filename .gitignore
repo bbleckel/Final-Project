@@ -3,6 +3,10 @@
 *.lo
 *.o
 *.obj
+*.swp
+
+# Class files
+*.class
 
 # Precompiled Headers
 *.gch
