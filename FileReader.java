@@ -26,6 +26,10 @@ public class FileReader {
             pixels = new Color[width][height];
             
             BufferedImage grayScale = image;
+	    BufferedImage newImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+	    Graphics2D ga = newImg.createGraphics();
+	    ga.drawImage(image, 0, 0, null);
+	    ga.dispose();
             
             for(int i = 0; i < height; i++){
                 for(int j = 0; j < width; j++){
@@ -37,8 +41,11 @@ public class FileReader {
                     
                     // convert to grayscale
                     int gr = (r + g + b) / 3;
-                    Color gColor = new Color(gr, gr, gr, a);
-
+                    Color gColor = new Color(gr, gr, gr, 10);
+		    newImg.setRGB(j, i, gColor.getRGB());
+		    Color newC = new Color(newImg.getRGB(j, i), true);
+		    int alpha = newC.getAlpha();
+	  	    System.out.println("newImg alpha is " + alpha);
                     grayScale.setRGB(j, i, gColor.getRGB());
                     
                     pixels[j][i] = gColor;
@@ -46,7 +53,7 @@ public class FileReader {
             }
             
             // write to file
-            ImageIO.write(grayScale, "jpg", new File("./gray.jpg"));
+            ImageIO.write(newImg, "jpg", new File("./gray.jpg"));
             
         } catch (Exception e) {
             System.out.println("Error reading file!");
