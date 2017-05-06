@@ -2,6 +2,7 @@ import java.util.*;
 import java.awt.*;
 
 public class Solver {
+    static FileReader file;
     public static void main (String[] args) {
         
         // process command line arguments
@@ -31,8 +32,12 @@ public class Solver {
         } else {
             String fileName = args[0];
             System.out.println("fileName = " + fileName);
-            FileReader obj = new FileReader(fileName);
-            Color[][] pixels = obj.pixels;
+            file = new FileReader(fileName);
+            Color[][] pixels = file.pixels;
+	
+	    GA alg = new GA(10, 1, 1, 0.1, 0.1, 10);
+	    alg.addPolygon();
+
             System.out.println("Found " + pixels.length * pixels[0].length + " pixels");
 
 //            for(int i = 0; i < pixels.length; i++) {
@@ -42,6 +47,5 @@ public class Solver {
 //            }
 
         }
-    } // end main
-    
+    } // end main			    
 }

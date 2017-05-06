@@ -27,6 +27,8 @@ public class FileReader {
             
             BufferedImage grayScale = image;
 	    BufferedImage newImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+	    image = newImg;
+ 	    // copy to a BufferedImage that can take alpha values
 	    Graphics2D ga = newImg.createGraphics();
 	    ga.drawImage(image, 0, 0, null);
 	    ga.dispose();
@@ -44,8 +46,6 @@ public class FileReader {
                     Color gColor = new Color(gr, gr, gr, 10);
 		    newImg.setRGB(j, i, gColor.getRGB());
 		    Color newC = new Color(newImg.getRGB(j, i), true);
-		    int alpha = newC.getAlpha();
-	  	    System.out.println("newImg alpha is " + alpha);
                     grayScale.setRGB(j, i, gColor.getRGB());
                     
                     pixels[j][i] = gColor;
