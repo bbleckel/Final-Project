@@ -26,9 +26,14 @@ public class FileReader {
             height = image.getHeight();
             pixels = new Color[width][height];
             
-            BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
             BufferedImage grayScale = image;
-//            bi.getGraphics().drawImage(image, 0, 0, width, height, null);
+
+            BufferedImage newImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+//            // copy to a BufferedImage that can take alpha values
+//            Graphics2D ga = newImg.createGraphics();
+//            ga.drawImage(image, 0, 0, null);
+//            ga.dispose();
             
             for(int i = 0; i < height; i++){
                 for(int j = 0; j < width; j++){
@@ -42,8 +47,9 @@ public class FileReader {
 
                     // convert to grayscale
                     int gr = (r + g + b) / 3;
-                    Color gColor = new Color(gr, gr, gr, a);
-
+                    Color gColor = new Color(gr, gr, gr, 10);
+                    newImg.setRGB(j, i, gColor.getRGB());
+                    Color newC = new Color(newImg.getRGB(j, i), true);
                     grayScale.setRGB(j, i, gColor.getRGB());
                     bi.setRGB(j, i, gColor.getRGB());
 //                    System.out.println("Set to " + gColor.getAlpha());
@@ -71,8 +77,8 @@ public class FileReader {
 //            }
             
             // write to file
-            ImageIO.write(bi, "jpg", new File("./gray.jpg"));
-            ImageIO.write(grayScale, "jpg", new File("./gray2.jpg"));
+//            ImageIO.write(grayScale, "jpg", new File("./gray2.jpg"));
+            ImageIO.write(newImg, "jpg", new File("./gray.jpg"));
             
         } catch (Exception e) {
             System.out.println("Error reading file!");
