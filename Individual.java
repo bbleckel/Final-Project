@@ -8,10 +8,15 @@ import javax.swing.JFrame;
 
 public class Individual {
     Triangle t;
-    BufferedImage img;
+    Vector<Point> points;
+    int imgHeight;
+//    BufferedImage img;
     public Individual(Triangle t, BufferedImage source) {
         this.t = t;
+        imgHeight = source.getHeight();
+        points = Geom.getPointsInTriangle(t, imgHeight);
         
+        /*
         // source will be a blank image for writing: make a copy
         img = new BufferedImage(source.getWidth(), source.getHeight(), source.getType());
         Graphics2D srcG = img.createGraphics();
@@ -29,11 +34,14 @@ public class Individual {
         srcG.setColor(c);
         srcG.fillPolygon(new int[] {t.a.X, t.b.X, t.c.X}, new int[] {t.a.Y, t.b.Y, t.c.Y}, 3);
         srcG.dispose();
-        
+        */
         
     }
     
     public void update() {
+        points = Geom.getPointsInTriangle(t, imgHeight);
+
+        /*
         Graphics2D srcG = img.createGraphics();
         // remove image (white background)
         srcG.setBackground(new Color(255, 255, 255, 0));
@@ -46,6 +54,6 @@ public class Individual {
         Color c = new Color(t.color, t.color, t.color);
         srcG.setColor(c);
         srcG.fillPolygon(new int[] {t.a.X, t.b.X, t.c.X}, new int[] {t.a.Y, t.b.Y, t.c.Y}, 3);
-        srcG.dispose();
+        srcG.dispose(); */
     }
 }
