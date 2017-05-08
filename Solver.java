@@ -5,7 +5,7 @@ public class Solver {
     static FileReader file;
     static Color[][] pixels;
     public static void main (String[] args) {
-        
+
         // process command line arguments
         if (args.length != 1){
             //            System.out.println();
@@ -35,19 +35,19 @@ public class Solver {
             System.out.println("fileName = " + fileName);
             file = new FileReader(fileName);
             pixels = file.pixels;
-            
-            GA alg = new GA(10, 1, 1, 0.1, 0.1, 5, file.width, file.height);
+
+            GA alg = new GA(50, 10, 1, 1, 0.1, 0.1, 5, file.width, file.height);
             alg.solveGA();
-            
-            
+
+
 //            System.out.println("Found " + pixels.length * pixels[0].length + " pixels");
-            
+
             //            for(int i = 0; i < pixels.length; i++) {
             //                for(int j = 0; j < pixels[i].length; j++) {
             //                    System.out.println(pixels[i][j]);
             //                }
             //            }
-            
+
         }
-    } // end main			    
+    } // end main
 }
