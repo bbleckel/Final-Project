@@ -36,8 +36,9 @@ public class Solver {
             file = new FileReader(fileName);
             pixels = file.pixels;
             
-            GA alg = new GA(30, 1, 1, 0.1, 0.1, 750, file.width, file.height);
+            GA alg = new GA(10, 1, 1, 0.1, 0.1, 5, file.width, file.height);
             alg.solveGA();
+            
             
 //            System.out.println("Found " + pixels.length * pixels[0].length + " pixels");
             
