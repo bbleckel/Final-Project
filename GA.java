@@ -17,7 +17,7 @@ public class GA {
     int crossover;
     int generations;
 
-    private final int MUT_AMNT = 20;
+    private final int MUT_AMNT = 5;
 
     // Image variables
     int imageWidth;
@@ -166,7 +166,7 @@ public class GA {
     public void uniformCross() {
 
         for(int i = 0; i < individuals; i++) {
-            double rand = ThreadLocalRandom.current().nextDouble(0, 2);
+            double rand = ThreadLocalRandom.current().nextDouble(0, 1);
 
             Individual parent1 = breedingPool[i];
             Individual parent2;
