@@ -220,7 +220,7 @@ public class GA {
             double fit2 = fitnessList[rand2];
 
 
-            if(fit1 > fit2) {
+            if(fit1 < fit2) {
                 breedingPool[i] = ind1;
             } else {
                 breedingPool[i] = ind2;
