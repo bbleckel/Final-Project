@@ -9,10 +9,12 @@ public class Solver {
         // process command line arguments
         if (args.length != 8){
             System.out.println();
-            System.out.println("java GARunner individuals selection elitism crossover pC pM generations disInterval");
+            System.out.println("java Solver fileName individuals triangles selection crossover pC pM generations");
+            System.out.println("    fileName     = name of image file to re-create (string)");
             System.out.println("    individuals  = number of individuals in population (int)");
-            System.out.println("    triangles    = number of triangles allotted to each individual (int):");
-//            System.out.println("                     ts   = tournament selection - implies ts1");
+            System.out.println("    triangles    = number of triangles allotted to each individual (int)");
+            System.out.println("    selection    = type of selection to use (int):");
+            System.out.println("                     1     = tournament selection");
 //            System.out.println("                            ts1 = same individual cannot compete against self");
 //            System.out.println("                            ts2 = same individual can compete against self");
 //            System.out.println("                     rs   = rank based selection");
@@ -20,10 +22,10 @@ public class Solver {
 //            System.out.println("    elitism      = use of elitism (string):");
 //            System.out.println("                     et   = use elitism");
 //            System.out.println("                     ef   = do not use elitism");
-//            System.out.println("    crossover    = crossover method (string):");
+            System.out.println("    crossover    = crossover method (int):");
 //            System.out.println("                     1c   = 1-point crossover");
 //            System.out.println("                     2c   = 2-point crossover");
-//            System.out.println("                     uc   = uniform crossover");
+            System.out.println("                        1   = uniform crossover");
             System.out.println("    pC           = crossover probability (double)");
             System.out.println("    pM           = mutation probability (double)");
             System.out.println("    generations  = max number of generations to run (int)");
@@ -39,7 +41,7 @@ public class Solver {
             double pC = Double.parseDouble(args[5]);
             double pM =Double.parseDouble(args[6]);
             int generations = Integer.parseInt(args[7]);
-            
+
             System.out.println("fileName = " + fileName);
             file = new FileReader(fileName);
             pixels = file.pixels;
