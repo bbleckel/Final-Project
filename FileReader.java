@@ -21,7 +21,7 @@ public class FileReader {
     int width;
     int height;
     Color[][] pixels;
-    
+
     public FileReader(String fileName) {
         try {
             File input = new File(fileName);
@@ -29,14 +29,14 @@ public class FileReader {
             width = image.getWidth();
             height = image.getHeight();
             pixels = new Color[width][height];
-            
+
             BufferedImage grayScale = image;
-            
+
             blank = new BufferedImage(width, height, image.getType());
             Graphics2D srcG = blank.createGraphics();
             srcG.drawImage(image, 0, 0, null);
             srcG.dispose();
-            
+
             // draw grayscale image
             for(int i = 0; i < height; i++){
                 for(int j = 0; j < width; j++){
@@ -63,8 +63,9 @@ public class FileReader {
 
             // write to file
             ImageIO.write(grayScale, "jpg", new File("./gray.jpg"));
+            ImageIO.write(image, "jpg", new File("./color.jpg"));
 //            ImageIO.write(newImg, "jpg", new File("./gray.jpg"));
-            
+
         } catch (Exception e) {
             System.out.println("Error reading file!");
             System.exit(1);

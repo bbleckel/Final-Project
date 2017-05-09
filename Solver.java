@@ -9,14 +9,14 @@ public class Solver {
         // process command line arguments
         if (args.length != 8){
             System.out.println();
-            System.out.println("java GARunner individuals selection elitism crossover pC pM generations disInterval");
+            System.out.println("java Solver individuals triangles selection crossover pC pM generations");
             System.out.println("    individuals  = number of individuals in population (int)");
             System.out.println("    triangles    = number of triangles allotted to each individual (int):");
-//            System.out.println("                     ts   = tournament selection - implies ts1");
-//            System.out.println("                            ts1 = same individual cannot compete against self");
-//            System.out.println("                            ts2 = same individual can compete against self");
-//            System.out.println("                     rs   = rank based selection");
-//            System.out.println("                     bs   = Boltzmann selection");
+        //    System.out.println("                     ts   = tournament selection - implies ts1");
+        //    System.out.println("                            ts1 = same individual cannot compete against self");
+        //    System.out.println("                            ts2 = same individual can compete against self");
+        //    System.out.println("                     rs   = rank based selection");
+        //    System.out.println("                     bs   = Boltzmann selection");
 //            System.out.println("    elitism      = use of elitism (string):");
 //            System.out.println("                     et   = use elitism");
 //            System.out.println("                     ef   = do not use elitism");
@@ -39,7 +39,7 @@ public class Solver {
             double pC = Double.parseDouble(args[5]);
             double pM =Double.parseDouble(args[6]);
             int generations = Integer.parseInt(args[7]);
-            
+
             System.out.println("fileName = " + fileName);
             file = new FileReader(fileName);
             pixels = file.pixels;

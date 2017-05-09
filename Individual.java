@@ -18,7 +18,7 @@ public class Individual {
         // imgHeight = source.getHeight();
         // points = Geom.getPointsInTriangle(t, imgHeight);
 
-        
+
         // source will be a blank image for writing: make a copy
         img = new BufferedImage(source.getWidth(), source.getHeight(), BufferedImage.TYPE_INT_ARGB);
 //        img = new BufferedImage(source.getWidth(), source.getHeight(), source.getType());
@@ -36,7 +36,7 @@ public class Individual {
 
         // actually draw triangles to image
         for(int i = 0; i < t.length; i++) {
-            Color c = new Color(t[i].color, t[i].color, t[i].color);
+            Color c = new Color(t[i].color[0], t[i].color[1], t[i].color[2]);
             srcG.setColor(c);
             srcG.fillPolygon(new int[] {t[i].a.X, t[i].b.X, t[i].c.X}, new int[] {t[i].a.Y, t[i].b.Y, t[i].c.Y}, 3);
         }
@@ -44,7 +44,7 @@ public class Individual {
     }
 
     public void update() {
-        
+
         Graphics2D srcG = img.createGraphics();
         // remove image (white background)
         srcG.setBackground(new Color(255, 255, 255, 0));
@@ -55,7 +55,7 @@ public class Individual {
 
         // redraw triangles to image
         for(int i = 0; i < t.length; i++) {
-            Color c = new Color(t[i].color, t[i].color, t[i].color);
+            Color c = new Color(t[i].color[0], t[i].color[1], t[i].color[2]);
             srcG.setColor(c);
             srcG.fillPolygon(new int[] {t[i].a.X, t[i].b.X, t[i].c.X}, new int[] {t[i].a.Y, t[i].b.Y, t[i].c.Y}, 3);
         }
