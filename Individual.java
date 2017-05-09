@@ -23,6 +23,8 @@ public class Individual {
         img = new BufferedImage(source.getWidth(), source.getHeight(), BufferedImage.TYPE_INT_ARGB);
 //        img = new BufferedImage(source.getWidth(), source.getHeight(), source.getType());
 
+// http://docs.oracle.com/javase/7/docs/api/constant-values.html#java.awt.image.BufferedImage.TYPE_INT_ARGB
+// for what each type int means
         System.out.println("Type " + source.getType());
         Graphics2D srcG = img.createGraphics();
 //        srcG.drawImage(source, 0, 0, null);
