@@ -172,14 +172,13 @@ public class GA {
             Individual parent2;
 
             Triangle[] tList = new Triangle[triangles];
-            for (int j = 0; j < triangles; j++) {
-                if(rand < pC) {
-                    if(i + 1 >= individuals) {
-                        parent2 = breedingPool[0];
-                    } else {
-                        parent2 = breedingPool[i + 1];
-                    }
-
+            if(rand < pC) { // doing crossover
+                if(i + 1 >= individuals) {
+                    parent2 = breedingPool[0];
+                } else {
+                    parent2 = breedingPool[i + 1];
+                }
+                for (int j = 0; j < triangles; j++) {
                     // take points and color from parents randomly
                     Triangle t;
                     int color;
@@ -198,16 +197,60 @@ public class GA {
                         t.color = parent2.t[j].color;
                     }
                     tList[j] = t;
-                } else {
-                    // if crossover does not occur, choose parent1
-                    tList[j] = parent1.t[j];
                 }
+            } else { // crossover will not occur
+                Individual offspring = parent1;
+                population[i] = offspring;
             }
-            Individual offspring = new Individual(tList, Solver.file.blank);
-            population[i] = offspring;
-
         }
     }
+
+    // old uniform crossover function
+    // public void uniformCross() {
+    //
+    //     for(int i = 0; i < individuals; i++) {
+    //         double rand = ThreadLocalRandom.current().nextDouble(0, 1);
+    //
+    //         Individual parent1 = breedingPool[i];
+    //         Individual parent2;
+    //
+    //         Triangle[] tList = new Triangle[triangles];
+    //         for (int j = 0; j < triangles; j++) {
+    //             if(rand < pC) {
+    //                 if(i + 1 >= individuals) {
+    //                     parent2 = breedingPool[0];
+    //                 } else {
+    //                     parent2 = breedingPool[i + 1];
+    //                 }
+    //
+    //                 // take points and color from parents randomly
+    //                 Triangle t;
+    //                 int color;
+    //
+    //                 double prob = ThreadLocalRandom.current().nextDouble(0, 1);
+    //                 if(prob < 0.5) {
+    //                     t = parent1.t[j];
+    //                 } else {
+    //                     t = parent2.t[j];
+    //                 }
+    //
+    //                 prob = ThreadLocalRandom.current().nextDouble(0, 1);
+    //                 if(prob < 0.5) {
+    //                     t.color = parent1.t[j].color;
+    //                 } else {
+    //                     t.color = parent2.t[j].color;
+    //                 }
+    //                 tList[j] = t;
+    //             } else {
+    //                 // if crossover does not occur, choose parent1
+    //                 tList[j] = parent1.t[j];
+    //             }
+    //         }
+    //         Individual offspring = new Individual(tList, Solver.file.blank);
+    //         population[i] = offspring;
+    //
+    //     }
+    // }
 
     public void tournamentSelect() {
         for(int i = 0; i < individuals; i++) {
