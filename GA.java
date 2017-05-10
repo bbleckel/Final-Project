@@ -19,7 +19,7 @@ public class GA {
     
     public static final float TRANSLUCENCY = .5f;
 
-    private final int MUT_AMNT = 5;
+    private final int MUT_AMNT = 15;
 
     // Image variables
     int imageWidth;
@@ -165,6 +165,24 @@ public class GA {
         }
     }
 
+    // public void onePCross() {
+    //
+    //     for(int i = 0; i < individuals; i++) {
+    //         double rand = ThreadLocalRandom.current().nextDouble(0, 1);
+    //
+    //         Individual parent1 = breedingPool[i];
+    //         Individual parent2;
+    //
+    //         Triangle[] tList = new Triangle[triangles];
+    //         if(rand < pC) { // doing crossover
+    //
+    //         } else {
+    //
+    //         }
+    //
+    //     }
+    // }
+
     public void uniformCross() {
 
         for(int i = 0; i < individuals; i++) {
@@ -177,8 +195,10 @@ public class GA {
             if(rand < pC) { // doing crossover
                 if(i + 1 >= individuals) {
                     parent2 = breedingPool[0];
+                    // System.out.println("breeding " + i + " and 0");
                 } else {
                     parent2 = breedingPool[i + 1];
+                    // System.out.println("breeding " + i + " and that plus 1");
                 }
                 for (int j = 0; j < triangles; j++) {
                     // take points and color from parents randomly
@@ -200,6 +220,8 @@ public class GA {
                     }
                     tList[j] = t;
                 }
+                Individual offspring = new Individual(tList, Solver.file.blank);
+                population[i] = offspring;
             } else { // crossover will not occur
                 Individual offspring = parent1;
                 population[i] = offspring;
@@ -256,19 +278,23 @@ public class GA {
 
     public void tournamentSelect() {
         for(int i = 0; i < individuals; i++) {
-            // int rand1 = (int) ThreadLocalRandom.current().nextInt(0, individuals);
+            int rand1 = (int) ThreadLocalRandom.current().nextInt(0, individuals);
             int rand2 = (int) ThreadLocalRandom.current().nextInt(0, individuals);
-            Individual ind1 = population[i];
-        //    Individual ind1 = population[rand1];
+            // System.out.println(i + " " + rand2);
+            // Individual ind1 = population[i];
+            Individual ind1 = population[rand1];
             Individual ind2 = population[rand2];
-            double fit1 = fitnessList[i];
+            // double fit1 = fitnessList[i];
+            double fit1 = fitnessList[rand1];
             double fit2 = fitnessList[rand2];
-
+            // System.out.println(fit1 + " " + fit2);
 
             if(fit1 < fit2) {
                 breedingPool[i] = ind1;
+                // System.out.println("Individual " + i + " with fitness " + fit1 + " beats individual " + rand2 + " with fitness " + fit2);
             } else {
                 breedingPool[i] = ind2;
+                // System.out.println("Individual " + rand2 + " with fitness " + fit2 + " beats individual " + i + " with fitness " + fit1);
             }
         //    breedingPool = population.clone();
 
@@ -424,7 +450,7 @@ public class GA {
     public void evalFitness() {
         for(int i = 0; i < individuals; i++) {
             fitnessList[i] = fitness(population[i]);
-            System.out.println("Individual " + i + " has fitness " + fitnessList[i]);
+            // System.out.println("Individual " + i + " has fitness " + fitnessList[i]);
         }
     }
 
@@ -448,7 +474,7 @@ public class GA {
         //    evalFitness();
             int bestFitness = getBestFitness();
             drawBest(bestFitness, g);
-            System.out.println("Best fitness is individual " + bestFitness);
+            System.out.println("Best fitness is individual " + bestFitness + " with fitness " + fitnessList[bestFitness]);
             if(fitnessList[bestFitness] > bestValue) {
                 // not really relevant to keep a 'best' individual -- just a triangle
                 genFound = g + 1;

@@ -52,7 +52,8 @@ public class FileReader {
                     grayScale.setRGB(j, i, gColor.getRGB());
                     blank.setRGB(j, i, gColor.getRGB());
 
-                    pixels[j][i] = gColor;
+                    // pixels[j][i] = gColor;
+                    pixels[j][i] = c;
                 }
             }
             // remove image from blank
