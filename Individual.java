@@ -34,7 +34,7 @@ public class Individual {
         srcG.clearRect(0, 0, source.getWidth(), source.getHeight());
 
         // set opacity
-        srcG.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        srcG.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, GA.TRANSLUCENCY));
 
         // actually draw triangles to image
         for(int i = 0; i < t.length; i++) {
@@ -53,7 +53,7 @@ public class Individual {
         srcG.clearRect(0, 0, img.getWidth(), img.getHeight());
 
         // set opacity
-        srcG.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .5f));
+        srcG.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, GA.TRANSLUCENCY));
 
         // redraw triangles to image
         for(int i = 0; i < t.length; i++) {

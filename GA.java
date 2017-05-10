@@ -16,6 +16,8 @@ public class GA {
     int selection;
     int crossover;
     int generations;
+    
+    public static final float TRANSLUCENCY = .5f;
 
     private final int MUT_AMNT = 5;
 
@@ -146,7 +148,7 @@ public class GA {
 
         Graphics2D g = img.createGraphics();
 
-        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .5f));
+        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, TRANSLUCENCY));
 
         Color c = new Color(t.color[0], t.color[1], t.color[2]);
 
