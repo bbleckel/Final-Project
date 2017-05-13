@@ -168,6 +168,24 @@ public class GA {
         }
     }
 
+    // public void onePCross() {
+    //
+    //     for(int i = 0; i < individuals; i++) {
+    //         double rand = ThreadLocalRandom.current().nextDouble(0, 1);
+    //
+    //         Individual parent1 = breedingPool[i];
+    //         Individual parent2;
+    //
+    //         Triangle[] tList = new Triangle[triangles];
+    //         if(rand < pC) { // doing crossover
+    //
+    //         } else {
+    //
+    //         }
+    //
+    //     }
+    // }
+
     public void uniformCross() {
         for(int i = 0; i < individuals; i++) {
             double rand = ThreadLocalRandom.current().nextDouble(0, 1);
@@ -262,24 +280,28 @@ public class GA {
 
     public void tournamentSelect() {
         for(int i = 0; i < individuals; i++) {
-            // int rand1 = (int) ThreadLocalRandom.current().nextInt(0, individuals);
+            int rand1 = (int) ThreadLocalRandom.current().nextInt(0, individuals);
             int rand2 = (int) ThreadLocalRandom.current().nextInt(0, individuals);
-            Individual ind1 = population[i];
-        //    Individual ind1 = population[rand1];
+            // System.out.println(i + " " + rand2);
+            // Individual ind1 = population[i];
+            Individual ind1 = population[rand1];
             Individual ind2 = population[rand2];
-            double fit1 = fitnessList[i];
+            // double fit1 = fitnessList[i];
+            double fit1 = fitnessList[rand1];
             double fit2 = fitnessList[rand2];
-
-
-//            if(fit1 < fit2) {
-//                breedingPool[i] = ind1;
-//            } else {
-//                breedingPool[i] = ind2;
-//            }
+            // System.out.println(fit1 + " " + fit2);
+            
+            //            if(fit1 < fit2) {
+            //                breedingPool[i] = ind1;
+            //                // System.out.println("Individual " + i + " with fitness " + fit1 + " beats individual " + rand2 + " with fitness " + fit2);
+            //            } else {
+            //                breedingPool[i] = ind2;
+            //                // System.out.println("Individual " + rand2 + " with fitness " + fit2 + " beats individual " + i + " with fitness " + fit1);
+            //            }
             breedingPool = population.clone();
-
+            
         }
-
+        
     }
 
     public Point mutate(Point p) {
@@ -553,7 +575,7 @@ public class GA {
     public void evalFitness() {
         for(int i = 0; i < individuals; i++) {
             fitnessList[i] = fitness(population[i]);
-            System.out.println("Individual " + i + " has fitness " + fitnessList[i]);
+            // System.out.println("Individual " + i + " has fitness " + fitnessList[i]);
         }
     }
 
@@ -696,6 +718,7 @@ public class GA {
             
             bestFitness = getBestFitness();
             System.out.println("Best fitness is individual " + bestFitness);
+
             if(fitnessList[bestFitness] > bestValue) {
                 // not really relevant to keep a 'best' individual -- just a triangle
                 genFound = g + 1;
