@@ -46,6 +46,8 @@ public class Solver {
             System.out.println("fileName = " + fileName);
             file = new FileReader(fileName);
             pixels = file.pixels;
+            
+            System.out.println("Solving with:\n" + individuals + " individuals\n" + triangles + " triangles\n" + pC + " pC\n" + pM + " pM\n" + generations + " generations\n");
 
             GA alg = new GA(individuals, triangles, selection, crossover, pC, pM, generations, file.width, file.height);
             alg.solveGA();

@@ -30,9 +30,14 @@ public class FileReader {
             height = image.getHeight();
             pixels = new Color[width][height];
 
-            BufferedImage grayScale = image;
+//            BufferedImage grayScale = image;
+            
+            BufferedImage newImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+            Graphics2D newG = newImg.createGraphics();
+            newG.drawImage(image, 0, 0, null);
+            newG.dispose();
 
-            blank = new BufferedImage(width, height, image.getType());
+            blank = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
             Graphics2D srcG = blank.createGraphics();
             srcG.drawImage(image, 0, 0, null);
             srcG.dispose();
@@ -40,11 +45,24 @@ public class FileReader {
             // draw grayscale image
             for(int i = 0; i < height; i++){
                 for(int j = 0; j < width; j++){
-                    Color c = new Color(image.getRGB(j, i), true);
+                    Color c = new Color(image.getRGB(j, i));
                     int r = c.getRed();
                     int g = c.getGreen();
                     int b = c.getBlue();
                     int a = c.getAlpha();
+                    
+                    if(r == 0 && g == 0 && b == 0) {
+                        r = g = b = 255;
+                        c = new Color(r, g, b);
+                    }
+                    newImg.setRGB(j, i, c.getRGB());
+
+                    Color nc = new Color(newImg.getRGB(j, i));
+                    int nr = nc.getRed();
+                    int ng = nc.getGreen();
+                    int nb = nc.getBlue();
+                    int na = nc.getAlpha();
+//                    if(r != nr || g != ng || b != nb || a != na)
 
                     // convert to grayscale
 //                    int gr = (r + g + b) / 3;
@@ -56,6 +74,9 @@ public class FileReader {
                     pixels[j][i] = c;
                 }
             }
+            
+            image = newImg;
+            
             // remove image from blank
             Graphics2D graphic = blank.createGraphics();
             graphic.setBackground(new Color(255, 255, 255, 0));
@@ -63,8 +84,9 @@ public class FileReader {
             graphic.dispose();
 
             // write to file
+            ImageIO.write(blank, "jpg", new File("./blank.jpg"));
 //            ImageIO.write(grayScale, "jpg", new File("./gray.jpg"));
-            ImageIO.write(image, "jpg", new File("./color.jpg"));
+            ImageIO.write(newImg, "jpg", new File("./color.jpg"));
 //            ImageIO.write(newImg, "jpg", new File("./gray.jpg"));
 
         } catch (Exception e) {

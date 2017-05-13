@@ -11,10 +11,12 @@ public class Individual {
     Vector<Point> points;
     int imgHeight;
     BufferedImage img;
+    double fitness;
 //    BufferedImage img;
-    public Individual(Triangle[] t, BufferedImage source) {
+    public Individual(Triangle[] t, BufferedImage source, double fitness) {
 //        this.t = new Triangle[t.length];
         this.t = t;
+        this.fitness = fitness;
         // imgHeight = source.getHeight();
         // points = Geom.getPointsInTriangle(t, imgHeight);
 
@@ -65,3 +67,15 @@ public class Individual {
         srcG.dispose();
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
