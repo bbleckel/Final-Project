@@ -20,7 +20,7 @@ public class Individual {
 
 
         // source will be a blank image for writing: make a copy
-        img = new BufferedImage(source.getWidth(), source.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        img = new BufferedImage(source.getWidth(), source.getHeight(), BufferedImage.TYPE_INT_RGB);
 //        img = new BufferedImage(source.getWidth(), source.getHeight(), source.getType());
 
 // http://docs.oracle.com/javase/7/docs/api/constant-values.html#java.awt.image.BufferedImage.TYPE_INT_ARGB
@@ -33,11 +33,12 @@ public class Individual {
         srcG.setBackground(new Color(255, 255, 255, 0));
         srcG.clearRect(0, 0, source.getWidth(), source.getHeight());
 
-        // set opacity
-        srcG.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, GA.TRANSLUCENCY));
 
         // actually draw triangles to image
         for(int i = 0; i < t.length; i++) {
+            // set opacity
+            srcG.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, t[i].alpha));
+
             Color c = new Color(t[i].color[0], t[i].color[1], t[i].color[2]);
             srcG.setColor(c);
             srcG.fillPolygon(new int[] {t[i].a.X, t[i].b.X, t[i].c.X}, new int[] {t[i].a.Y, t[i].b.Y, t[i].c.Y}, 3);
@@ -52,11 +53,11 @@ public class Individual {
         srcG.setBackground(new Color(255, 255, 255, 0));
         srcG.clearRect(0, 0, img.getWidth(), img.getHeight());
 
-        // set opacity
-        srcG.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, GA.TRANSLUCENCY));
-
         // redraw triangles to image
         for(int i = 0; i < t.length; i++) {
+            // set opacity
+            srcG.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, t[i].alpha));
+
             Color c = new Color(t[i].color[0], t[i].color[1], t[i].color[2]);
             srcG.setColor(c);
             srcG.fillPolygon(new int[] {t[i].a.X, t[i].b.X, t[i].c.X}, new int[] {t[i].a.Y, t[i].b.Y, t[i].c.Y}, 3);

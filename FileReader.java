@@ -47,12 +47,13 @@ public class FileReader {
                     int a = c.getAlpha();
 
                     // convert to grayscale
-                    int gr = (r + g + b) / 3;
-                    Color gColor = new Color(gr, gr, gr, a);
-                    grayScale.setRGB(j, i, gColor.getRGB());
-                    blank.setRGB(j, i, gColor.getRGB());
+//                    int gr = (r + g + b) / 3;
+//                    Color gColor = new Color(gr, gr, gr, a);
+//                    grayScale.setRGB(j, i, gColor.getRGB());
+//                    blank.setRGB(j, i, gColor.getRGB());
 
-                    pixels[j][i] = gColor;
+//                    pixels[j][i] = gColor;
+                    pixels[j][i] = c;
                 }
             }
             // remove image from blank
@@ -62,7 +63,7 @@ public class FileReader {
             graphic.dispose();
 
             // write to file
-            ImageIO.write(grayScale, "jpg", new File("./gray.jpg"));
+//            ImageIO.write(grayScale, "jpg", new File("./gray.jpg"));
             ImageIO.write(image, "jpg", new File("./color.jpg"));
 //            ImageIO.write(newImg, "jpg", new File("./gray.jpg"));
 
