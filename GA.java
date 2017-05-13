@@ -521,6 +521,80 @@ public class GA {
 
     }
 
+    public void newMutatePopulation() {
+        int mutRand;
+        for(int i = 0; i < individuals; i++) {
+            Triangle[] tList = population[i].t.clone();
+            for(int j = 0; j < triangles; j++) {
+                // with some probability, mutate points/color/alpha
+                // mutate vertex a?
+                double prob = ThreadLocalRandom.current().nextDouble(0, 1);
+                if(prob < pM) {
+                    tList[j].a = mutate(tList[j].a);
+                }
+                
+                // mutate vertex b?
+                prob = ThreadLocalRandom.current().nextDouble(0, 1);
+                if(prob < pM) {
+                    tList[j].b = mutate(tList[j].b);
+                }
+                
+                // mutate vertex c?
+                prob = ThreadLocalRandom.current().nextDouble(0, 1);
+                if(prob < pM) {
+                    tList[j].c = mutate(tList[j].c);
+                }
+                
+                // mutate color?
+                
+                prob = ThreadLocalRandom.current().nextDouble(0, 1);
+                if(prob < pM) {
+                    int[] color = tList[j].color;
+                    for (int c = 0; c < 3; c++) {
+                        double dir = ThreadLocalRandom.current().nextDouble(0, 1);
+                        // choose direction
+                        int direction = 0;
+                        if(dir < 0.5) {
+                            direction = 1;
+                        } else {
+                            direction = -1;
+                        }
+                        // check out of bounds
+                        if(color[c] + direction * COLOR_MUT_AMNT > 255 || color[c] + direction * COLOR_MUT_AMNT < 0) {
+                            color[c] += -direction * COLOR_MUT_AMNT;
+                        } else {
+                            color[c] += direction * COLOR_MUT_AMNT;
+                        }
+                    }
+                    tList[j].color = color;
+                }
+                
+                // mutate alpha?
+                prob = ThreadLocalRandom.current().nextDouble(0, 1);
+                if(prob < pM) {
+                    double dir = ThreadLocalRandom.current().nextDouble(0, 1);
+                    // choose direction
+                    int direction = 0;
+                    if(dir < 0.5) {
+                        direction = 1;
+                    } else {
+                        direction = -1;
+                    }
+                    if(tList[j].alpha + direction * ALPHA_MUT_AMNT > 1f || tList[j].alpha + direction * ALPHA_MUT_AMNT < 0) {
+                        tList[j].alpha += -direction * ALPHA_MUT_AMNT;
+                    } else {
+                        tList[j].alpha += direction * ALPHA_MUT_AMNT;
+                    }
+                }
+                
+            }
+            Individual newInd = new Individual(tList, Solver.file.blank, 0);
+            population[i] = newInd;
+            //        newInd.update();
+        }
+    }
+
+    
     public Individual mutateIndividual(Individual ind) {
         int mutRand;
         Triangle[] tList = ind.t.clone();
@@ -589,7 +663,7 @@ public class GA {
         }
         Individual newInd = new Individual(tList, Solver.file.blank, 0);
 
-        newInd.update();
+//        newInd.update();
         return newInd;
     }
   
@@ -614,6 +688,16 @@ public class GA {
             }
         }
         return color;
+    }
+    
+    public Individual copyIndividual(Individual ind) {
+        System.out.println("COPY\n\n");
+        System.out.println("ind fitness " + fitness(ind));
+        Triangle[] newList = ind.t.clone();
+        Individual newInd = new Individual(newList, ind.img, ind.fitness);
+        System.out.println("newInd fitness " + fitness(newInd));
+        System.out.println("DONE\n\n");
+        return newInd;
     }
 
     public int getBestFitness() {
@@ -659,7 +743,7 @@ public class GA {
                 double gDiff = Math.abs(indGreen - sourceGreen);
                 double bDiff = Math.abs(indBlue - sourceBlue);
                 
-                double avg = (rDiff + gDiff + bDiff) / 3;
+                double avg = ((double) rDiff + gDiff + bDiff) / 3;
 
                 sum += (255 - avg);
             }
@@ -667,7 +751,7 @@ public class GA {
 
         // 255 - diff?
 
-        return (sum / (imageWidth * imageHeight * 255));
+        return (sum / ((double) imageWidth * imageHeight * 255));
     }
 
     public void evalFitness() {
@@ -821,27 +905,48 @@ public class GA {
         //    evalFitness();
             
 //            drawPopulation(g);
+            store.fitness = fitness(store);
             System.out.println("HIHIStore's fitness is " + store.fitness);
 
+            System.out.println("FIRST ARE " + g + ":");
+            for(int i = 0; i < individuals; i++) {
+                System.out.println(fitnessList[i]);
+            }
+            
             evalFitness();
+            System.out.println("Fitnesses at beginning of " + g + ":");
+            for(int i = 0; i < individuals; i++) {
+                System.out.println(fitnessList[i]);
+            }
             
             bestFitness = getBestFitness();
-            store = population[bestFitness];
+            System.out.println("Best is " + bestFitness + "(" + fitnessList[bestFitness] + ")");
+            store = copyIndividual(population[bestFitness]);
+            store.fitness = fitness(store);
             System.out.println("Store's fitness is " + store.fitness);
             
 //            tournamentSelect();
             boltzmannSelect();
 ////            drawBreedingPool(g);
             uniformCross();
-//            mutatePopulation();
-            
+            newMutatePopulation();
+            evalFitness();
+
+            System.out.println("Fitnesses AFTER " + g + ":");
+            for(int i = 0; i < individuals; i++) {
+                System.out.println(fitnessList[i]);
+            }
             // re-insert previous best fitness into worst-fitness position
             int worst = getWorstFitness();
-            population[worst] = store;
+            System.out.println("Worst is " + worst + "(" + fitnessList[worst] + ")");
+            population[worst] = copyIndividual(store);
+            System.out.println("Just set, but now fitness is " + fitness(population[worst]) + " vs " + fitness(store));
+            fitnessList[worst] = store.fitness;
+//            population[worst].update();
+            store.fitness = fitness(store);
             System.out.println("Store's AFTER is " + store.fitness);
 
             
-//            evalFitness();
 //            drawPopulation(888);
             
             bestFitness = getBestFitness();
