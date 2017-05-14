@@ -149,18 +149,18 @@ public class GA {
         for(int i = 0; i < individuals; i++) {
             double rand = ThreadLocalRandom.current().nextDouble(0, 1);
             
-            //            Individual parent1 = newCopyIndividual(breedingPool[i]);
+            //            Individual parent1 = copyIndividual(breedingPool[i]);
             Individual parent1 = breedingPool[i];
             Individual parent2;
             
             Triangle[] tList = new Triangle[triangles];
             if(rand < pC) { // doing crossover
                 if(i + 1 >= individuals) {
-                    //                    parent2 = newCopyIndividual(breedingPool[0]);
+                    //                    parent2 = copyIndividual(breedingPool[0]);
                     parent2 = breedingPool[0];
                     // System.out.println("breeding " + i + " and 0");
                 } else {
-                    //                    parent2 = newCopyIndividual(breedingPool[i + 1]);
+                    //                    parent2 = copyIndividual(breedingPool[i + 1]);
                     parent2 = breedingPool[i + 1];
                     // System.out.println("breeding " + i + " and that plus 1");
                 }
@@ -168,9 +168,9 @@ public class GA {
                 // rearrange so parent 1 is the one with the higher fitness
                 //                System.out.println("First, 1 " + parent1.fitness + ", 2 " + parent2.fitness);
                 if(parent1.fitness < parent2.fitness) {
-                    //                    Individual temp = newCopyIndividual(parent1);
-                    //                    parent1 = newCopyIndividual(parent2);
-                    //                    parent2 = newCopyIndividual(temp);
+                    //                    Individual temp = copyIndividual(parent1);
+                    //                    parent1 = copyIndividual(parent2);
+                    //                    parent2 = copyIndividual(temp);
                     Individual temp = parent1;
                     parent1 = parent2;
                     parent2 = temp;
@@ -210,12 +210,12 @@ public class GA {
                 }
                 
                 Individual offspring = new Individual(tList, Solver.file.blank, 0);
-                //                population[i] = newCopyIndividual(offspring);
+                //                population[i] = copyIndividual(offspring);
                 population[i] = offspring;
             } else { // crossover will not occur
-                Individual offspring = newCopyIndividual(breedingPool[i]);
+                Individual offspring = copyIndividual(breedingPool[i]);
 //                Individual offspring = breedingPool[i];
-                //                population[i] = newCopyIndividual(offspring);
+                //                population[i] = copyIndividual(offspring);
                 population[i] = offspring;
             }
         }
@@ -235,7 +235,7 @@ public class GA {
                 prob += Math.exp(fitnessList[j]) / total;
                 if(prob > rand) {
                     breedingPool[i] = population[j];
-//                    breedingPool[i] = newCopyIndividual(population[j]);
+//                    breedingPool[i] = copyIndividual(population[j]);
                     break;
                 }
             }
@@ -339,84 +339,6 @@ public class GA {
     public void mutatePopulation() {
         int mutRand;
         for(int i = 0; i < individuals; i++) {
-            boolean mutated = false;
-            for(int j = 0; j < triangles; j++) {
-                // with some probability, mutate points/color
-                // mutate vertex a?
-                double prob = ThreadLocalRandom.current().nextDouble(0, 1);
-                if(prob < pM) {
-                    mutated = true;
-                    population[i].t[j].a = mutate(population[i].t[j].a);
-                }
-                
-                // mutate vertex b?
-                prob = ThreadLocalRandom.current().nextDouble(0, 1);
-                if(prob < pM) {
-                    mutated = true;
-                    population[i].t[j].b = mutate(population[i].t[j].b);
-                }
-                
-                // mutate vertex c?
-                prob = ThreadLocalRandom.current().nextDouble(0, 1);
-                if(prob < pM) {
-                    mutated = true;
-                    population[i].t[j].c = mutate(population[i].t[j].c);
-                }
-                
-                // mutate color?
-                prob = ThreadLocalRandom.current().nextDouble(0, 1);
-                if(prob < pM) {
-                    mutated = true;
-                    int[] color = population[i].t[j].color;
-                    for (int c = 0; c < 3; c++) {
-                        double dir = ThreadLocalRandom.current().nextDouble(0, 1);
-                        // choose direction
-                        int direction = 0;
-                        if(dir < 0.5) {
-                            direction = 1;
-                        } else {
-                            direction = -1;
-                        }
-                        // check out of bounds
-                        if(color[c] + direction * COLOR_MUT_AMNT > 255 || color[c] + direction * COLOR_MUT_AMNT < 0) {
-                            color[c] += -direction * COLOR_MUT_AMNT;
-                        } else {
-                            color[c] += direction * COLOR_MUT_AMNT;
-                        }
-                    }
-                    population[i].t[j].color = color;
-                }
-                
-                // mutate alpha?
-                prob = ThreadLocalRandom.current().nextDouble(0, 1);
-                if(prob < pM) {
-                    mutated = true;
-                    double dir = ThreadLocalRandom.current().nextDouble(0, 1);
-                    // choose direction
-                    int direction = 0;
-                    if(dir < 0.5) {
-                        direction = 1;
-                    } else {
-                        direction = -1;
-                    }
-                    if(population[i].t[j].alpha + direction * ALPHA_MUT_AMNT > 1f || population[i].t[j].alpha + direction * ALPHA_MUT_AMNT < 0) {
-                        population[i].t[j].alpha += -direction * ALPHA_MUT_AMNT;
-                    } else {
-                        population[i].t[j].alpha += direction * ALPHA_MUT_AMNT;
-                    }
-                }
-                
-            }
-            if(mutated) {
-                population[i].update();
-            }
-        }
-        
-    }
-    
-    public void newMutatePopulation() {
-        int mutRand;
-        for(int i = 0; i < individuals; i++) {
             Triangle[] tList = population[i].t.clone();
             for(int j = 0; j < triangles; j++) {
                 // with some probability, mutate points/color/alpha
@@ -482,108 +404,13 @@ public class GA {
                 
             }
             Individual newInd = new Individual(tList, Solver.file.blank, 0);
-            population[i] = newCopyIndividual(newInd);
+            population[i] = copyIndividual(newInd);
             //            population[i] = newInd;
             //        newInd.update();
         }
     }
-    
-    public Individual mutateIndividual(Individual ind) {
-        int mutRand;
-        Triangle[] tList = ind.t.clone();
-        for(int j = 0; j < triangles; j++) {
-            // with some probability, mutate points/color/alpha
-            // mutate vertex a?
-            double prob = ThreadLocalRandom.current().nextDouble(0, 1);
-            if(prob < pM) {
-                tList[j].a = mutate(tList[j].a);
-            }
-            
-            // mutate vertex b?
-            prob = ThreadLocalRandom.current().nextDouble(0, 1);
-            if(prob < pM) {
-                tList[j].b = mutate(tList[j].b);
-            }
-            
-            // mutate vertex c?
-            prob = ThreadLocalRandom.current().nextDouble(0, 1);
-            if(prob < pM) {
-                tList[j].c = mutate(tList[j].c);
-            }
-            
-            // mutate color?
-            
-            prob = ThreadLocalRandom.current().nextDouble(0, 1);
-            if(prob < pM) {
-                int[] color = tList[j].color;
-                for (int c = 0; c < 3; c++) {
-                    double dir = ThreadLocalRandom.current().nextDouble(0, 1);
-                    // choose direction
-                    int direction = 0;
-                    if(dir < 0.5) {
-                        direction = 1;
-                    } else {
-                        direction = -1;
-                    }
-                    // check out of bounds
-                    if(color[c] + direction * COLOR_MUT_AMNT > 255 || color[c] + direction * COLOR_MUT_AMNT < 0) {
-                        color[c] += -direction * COLOR_MUT_AMNT;
-                    } else {
-                        color[c] += direction * COLOR_MUT_AMNT;
-                    }
-                }
-                tList[j].color = color;
-            }
-            
-            // mutate alpha?
-            prob = ThreadLocalRandom.current().nextDouble(0, 1);
-            if(prob < pM) {
-                double dir = ThreadLocalRandom.current().nextDouble(0, 1);
-                // choose direction
-                int direction = 0;
-                if(dir < 0.5) {
-                    direction = 1;
-                } else {
-                    direction = -1;
-                }
-                if(tList[j].alpha + direction * ALPHA_MUT_AMNT > 1f || tList[j].alpha + direction * ALPHA_MUT_AMNT < 0) {
-                    tList[j].alpha += -direction * ALPHA_MUT_AMNT;
-                } else {
-                    tList[j].alpha += direction * ALPHA_MUT_AMNT;
-                }
-            }
-            
-        }
-        Individual newInd = new Individual(tList, Solver.file.blank, 0);
-        
-        //        newInd.update();
-        return newInd;
-    }
-    
-    public int[] getNewColor(int[] color) {
-        for(int c = 0; c < color.length; c++) {
-            double prob = ThreadLocalRandom.current().nextDouble(0, 1);
-            if(prob < pM) {
-                double dir = ThreadLocalRandom.current().nextDouble(0, 1);
-                // choose direction
-                int direction = 0;
-                if(dir < 0.5) {
-                    direction = 1;
-                } else {
-                    direction = -1;
-                }
-                // check out of bounds
-                if(color[c] + direction * COLOR_MUT_AMNT > 255 || color[c] + direction * COLOR_MUT_AMNT < 0) {
-                    color[c] += -direction * COLOR_MUT_AMNT;
-                } else {
-                    color[c] += direction * COLOR_MUT_AMNT;
-                }
-            }
-        }
-        return color;
-    }
-    
-    public Individual newCopyIndividual(Individual ind) {
+
+    public Individual copyIndividual(Individual ind) {
         // having Java pass-by-reference issues, so this is an attempt
         // to be completely thorough in pass-by-copy, creating a new individual
         // that is in no way connected (by reference) to ind
@@ -612,29 +439,6 @@ public class GA {
         }
         
         Individual newInd = new Individual(tList, Solver.file.blank, ind.fitness);
-        return newInd;
-    }
-    
-    public Individual copyIndividual(Individual ind) {
-        double firstFit = fitness(ind);
-        //        System.out.println("ind fitness " + firstFit);
-        Triangle[] newList = ind.t.clone();
-        Individual newInd = new Individual(newList, Solver.file.blank, ind.fitness);
-        double newFit = fitness(newInd);
-        //        System.out.println("newInd fitness " + newFit);
-        
-        for(int i = 0; i < triangles; i++) {
-            if(ind.t[i].a.X != newInd.t[i].a.X || ind.t[i].a.Y != newInd.t[i].a.Y || ind.t[i].b.X != newInd.t[i].b.X || ind.t[i].b.Y != newInd.t[i].b.Y || ind.t[i].c.X != newInd.t[i].c.X || ind.t[i].c.Y != newInd.t[i].c.Y) {
-                System.out.println("TROUBLE!!\n\n");
-                ind.t[i].printSelf();
-                newInd.t[i].printSelf();
-                
-            }
-        }
-        if(firstFit != newFit) {
-            System.out.println("RUH ROH!\n");
-        }
-        
         return newInd;
     }
     
@@ -719,8 +523,8 @@ public class GA {
         initPopulation();
         drawPopulation(0);
         
-        Individual store = newCopyIndividual(population[0]);
-        Individual bestInd = newCopyIndividual(population[0]);
+        Individual store = copyIndividual(population[0]);
+        Individual bestInd = copyIndividual(population[0]);
         
         int bestFitness = 0;
         
@@ -733,17 +537,17 @@ public class GA {
             
             // store best individual
             bestFitness = getBestFitness();
-            store = newCopyIndividual(population[bestFitness]);
+            store = copyIndividual(population[bestFitness]);
             store.fitness = fitnessList[bestFitness];
             
             boltzmannSelect();
             uniformCross();
-            newMutatePopulation();
+            mutatePopulation();
             evalFitness();
             
             // re-insert previous best fitness into worst-fitness position
             int worst = getWorstFitness();
-            population[worst] = newCopyIndividual(store);
+            population[worst] = copyIndividual(store);
             fitnessList[worst] = store.fitness;
             
             bestFitness = getBestFitness();
@@ -751,7 +555,7 @@ public class GA {
             if(fitnessList[bestFitness] > bestValue) {
                 genFound = g + 1;
                 bestValue = fitnessList[bestFitness];
-                bestInd = population[0];
+                bestInd = copyIndividual(population[0]);
             }
             
             if((generations - g) % 100 == 0) {
