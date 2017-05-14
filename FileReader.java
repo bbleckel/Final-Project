@@ -50,11 +50,7 @@ public class FileReader {
                     int g = c.getGreen();
                     int b = c.getBlue();
                     int a = c.getAlpha();
-                    
-                    if(r == 0 && g == 0 && b == 0) {
-                        r = g = b = 255;
-                        c = new Color(r, g, b);
-                    }
+
                     newImg.setRGB(j, i, c.getRGB());
 
                     Color nc = new Color(newImg.getRGB(j, i));
@@ -62,7 +58,6 @@ public class FileReader {
                     int ng = nc.getGreen();
                     int nb = nc.getBlue();
                     int na = nc.getAlpha();
-//                    if(r != nr || g != ng || b != nb || a != na)
 
                     // convert to grayscale
 //                    int gr = (r + g + b) / 3;

@@ -136,7 +136,6 @@ public class GA {
             }
         }
     }
-
     
     public void drawBest(int index, int generation) {
         try {
@@ -211,20 +210,21 @@ public class GA {
     // }
 
     public void uniformCross() {
-//            System.out.println("Breeding pool has " + )
-        
         for(int i = 0; i < individuals; i++) {
             double rand = ThreadLocalRandom.current().nextDouble(0, 1);
             
+//            Individual parent1 = newCopyIndividual(breedingPool[i]);
             Individual parent1 = breedingPool[i];
             Individual parent2;
             
             Triangle[] tList = new Triangle[triangles];
             if(rand < pC) { // doing crossover
                 if(i + 1 >= individuals) {
+//                    parent2 = newCopyIndividual(breedingPool[0]);
                     parent2 = breedingPool[0];
                     // System.out.println("breeding " + i + " and 0");
                 } else {
+//                    parent2 = newCopyIndividual(breedingPool[i + 1]);
                     parent2 = breedingPool[i + 1];
                     // System.out.println("breeding " + i + " and that plus 1");
                 }
@@ -232,12 +232,13 @@ public class GA {
                 // rearrange so parent 1 is the one with the higher fitness
 //                System.out.println("First, 1 " + parent1.fitness + ", 2 " + parent2.fitness);
                 if(parent1.fitness < parent2.fitness) {
+//                    Individual temp = newCopyIndividual(parent1);
+//                    parent1 = newCopyIndividual(parent2);
+//                    parent2 = newCopyIndividual(temp);
                     Individual temp = parent1;
                     parent1 = parent2;
                     parent2 = temp;
                 }
-//                System.out.println("Second, 1 " + parent1.fitness + ", 2 " + parent2.fitness);
-
                 
                 for (int j = 0; j < triangles; j++) {
                     // take points and color from parents randomly
@@ -274,67 +275,25 @@ public class GA {
                 }
                 
                 Individual offspring = new Individual(tList, Solver.file.blank, 0);
+//                population[i] = newCopyIndividual(offspring);
                 population[i] = offspring;
             } else { // crossover will not occur
+//                Individual offspring = newCopyIndividual(breedingPool[i]);
                 Individual offspring = breedingPool[i];
+//                population[i] = newCopyIndividual(offspring);
                 population[i] = offspring;
             }
         }
     }
-
-    // old uniform crossover function
-    // public void uniformCross() {
-    //
-    //     for(int i = 0; i < individuals; i++) {
-    //         double rand = ThreadLocalRandom.current().nextDouble(0, 1);
-    //
-    //         Individual parent1 = breedingPool[i];
-    //         Individual parent2;
-    //
-    //         Triangle[] tList = new Triangle[triangles];
-    //         for (int j = 0; j < triangles; j++) {
-    //             if(rand < pC) {
-    //                 if(i + 1 >= individuals) {
-    //                     parent2 = breedingPool[0];
-    //                 } else {
-    //                     parent2 = breedingPool[i + 1];
-    //                 }
-    //
-    //                 // take points and color from parents randomly
-    //                 Triangle t;
-    //                 int color;
-    //
-    //                 double prob = ThreadLocalRandom.current().nextDouble(0, 1);
-    //                 if(prob < 0.5) {
-    //                     t = parent1.t[j];
-    //                 } else {
-    //                     t = parent2.t[j];
-    //                 }
-    //
-    //                 prob = ThreadLocalRandom.current().nextDouble(0, 1);
-    //                 if(prob < 0.5) {
-    //                     t.color = parent1.t[j].color;
-    //                 } else {
-    //                     t.color = parent2.t[j].color;
-    //                 }
-    //                 tList[j] = t;
-    //             } else {
-    //                 // if crossover does not occur, choose parent1
-    //                 tList[j] = parent1.t[j];
-    //             }
-    //         }
-    //         Individual offspring = new Individual(tList, Solver.file.blank);
-    //         population[i] = offspring;
-    //
-    //     }
-    // }
     
     public void boltzmannSelect() {
-        double total = 0;
-        for(int i = 0; i < individuals; i++) {
-            total += Math.exp(fitnessList[i]);
-            // System.out.println("Individual " + i + " has fitness " + fitnessList[i]);
-        }
+        
+        // can use this to normalize
+//        double total = 0;
+//        for(int i = 0; i < individuals; i++) {
+//            total += Math.exp(fitnessList[i]);
+//            // System.out.println("Individual " + i + " has fitness " + fitnessList[i]);
+//        }
         
         for(int i = 0; i < individuals; i++) {
             double prob = 0;
@@ -343,6 +302,7 @@ public class GA {
                 prob += Math.exp(fitnessList[j]) / total;
                 if(prob > rand) {
                     breedingPool[i] = population[j];
+//                    breedingPool[i] = newCopyIndividual(population[j]);
                     break;
                 }
             }
@@ -589,11 +549,11 @@ public class GA {
                 
             }
             Individual newInd = new Individual(tList, Solver.file.blank, 0);
-            population[i] = newInd;
+            population[i] = newCopyIndividual(newInd);
+//            population[i] = newInd;
             //        newInd.update();
         }
     }
-
     
     public Individual mutateIndividual(Individual ind) {
         int mutRand;
@@ -690,13 +650,58 @@ public class GA {
         return color;
     }
     
+    public Individual newCopyIndividual(Individual ind) {
+        // having Java pass-by-reference issues, so this is an attempt
+        // to be completely thorough in pass-by-copy, creating a new individual
+        // that is in no way connected (by reference) to ind
+        Triangle[] tList = new Triangle[triangles];
+        for(int i = 0; i < triangles; i++) {
+            int aX = ind.t[i].a.X;
+            int aY = ind.t[i].a.Y;
+            int bX = ind.t[i].b.X;
+            int bY = ind.t[i].b.Y;
+            int cX = ind.t[i].c.X;
+            int cY = ind.t[i].c.Y;
+            
+            Point a = new Point(aX, aY);
+            Point b = new Point(bX, bY);
+            Point c = new Point(cX, cY);
+            
+            int r = ind.t[i].color[0];
+            int g = ind.t[i].color[1];
+            int bl = ind.t[i].color[2];
+            int[] color = {r, g, bl};
+            
+            float alpha = ind.t[i].alpha;
+            
+            Triangle t = new Triangle(a, b, c, color, alpha);
+            tList[i] = t;
+        }
+        
+        Individual newInd = new Individual(tList, Solver.file.blank, ind.fitness);
+        return newInd;
+    }
+    
     public Individual copyIndividual(Individual ind) {
-        System.out.println("COPY\n\n");
-        System.out.println("ind fitness " + fitness(ind));
+        double firstFit = fitness(ind);
+//        System.out.println("ind fitness " + firstFit);
         Triangle[] newList = ind.t.clone();
-        Individual newInd = new Individual(newList, ind.img, ind.fitness);
-        System.out.println("newInd fitness " + fitness(newInd));
-        System.out.println("DONE\n\n");
+        Individual newInd = new Individual(newList, Solver.file.blank, ind.fitness);
+        double newFit = fitness(newInd);
+//        System.out.println("newInd fitness " + newFit);
+        
+        for(int i = 0; i < triangles; i++) {
+            if(ind.t[i].a.X != newInd.t[i].a.X || ind.t[i].a.Y != newInd.t[i].a.Y || ind.t[i].b.X != newInd.t[i].b.X || ind.t[i].b.Y != newInd.t[i].b.Y || ind.t[i].c.X != newInd.t[i].c.X || ind.t[i].c.Y != newInd.t[i].c.Y) {
+                System.out.println("TROUBLE!!\n\n");
+                ind.t[i].printSelf();
+                newInd.t[i].printSelf();
+
+            }
+        }
+        if(firstFit != newFit) {
+            System.out.println("RUH ROH!\n");
+        }
+        
         return newInd;
     }
 
@@ -726,6 +731,7 @@ public class GA {
     }
 
     public double fitness(Individual ind) {
+//        ind.update();
         double sum = 0;
         // evaluate fitness of a single individual
         for(int i = 0; i < ind.img.getHeight(); i++) {
@@ -755,16 +761,16 @@ public class GA {
     }
 
     public void evalFitness() {
-        double total = 0;
+//        double total = 0;
         for(int i = 0; i < individuals; i++) {
             fitnessList[i] = fitness(population[i]);
             // tell the individual what its fitness is (for crossover)
             population[i].fitness = fitnessList[i];
-            total += fitnessList[i];
+//            total += fitnessList[i];
             // System.out.println("Individual " + i + " has fitness " + fitnessList[i]);
         }
         
-        // normalize values
+        // normalize values ?
         for(int i = 0; i < individuals; i++) {
 //            fitnessList[i] = fitnessList[i] / total;
         }
@@ -777,10 +783,13 @@ public class GA {
         initPopulation();
         drawPopulation(0);
         
-        Individual store = population[0];
-        Individual bestInd = population[0];
+        Individual store = newCopyIndividual(population[0]);
+        Individual bestInd = newCopyIndividual(population[0]);
         
         int bestFitness = 0;
+        
+        long totalStart = System.currentTimeMillis();
+        long genStart = System.currentTimeMillis();
         
         for(int g = 0; g < generations; g++) {
             // draw each individual first
@@ -788,163 +797,23 @@ public class GA {
 //                drawPopulation(g);
             }
             
-//            double rand = ThreadLocalRandom.current().nextDouble(0, 1);
-//            
-//            Individual parent1 = population[0];
-//            Individual parent2;
-//            
-//            Triangle[] tList = new Triangle[triangles];
-//            if(rand < pC) { // doing crossover
-//                System.out.println("Crossover!");
-//                parent2 = population[1];
-//                    // System.out.println("breeding " + i + " and 0");
-//                for (int j = 0; j < triangles; j++) {
-//                    // take points and color from parents randomly
-//                    Triangle t;
-//                    int color;
-//                    
-//                    double prob = ThreadLocalRandom.current().nextDouble(0, 1);
-//                    if(prob < 0.5) {
-//                        t = parent1.t[j];
-//                    } else {
-//                        t = parent2.t[j];
-//                    }
-//                    
-//                    prob = ThreadLocalRandom.current().nextDouble(0, 1);
-//                    if(prob < 0.5) {
-//                        t.color = parent1.t[j].color;
-//                    } else {
-//                        t.color = parent2.t[j].color;
-//                    }
-//                    tList[j] = t;
-//                }
-//                newInd = new Individual(tList, Solver.file.blank);
-//            } else { // crossover will not occur
-//            }
-        
-//            Point a = new Point(125, 125);
-//            Point b = new Point(180, 275);
-//            Point c = new Point(250, 125);
-//            Point a2 = new Point(105, 125);
-//            Point b2 = new Point(160, 275);
-//            Point c2 = new Point(230, 125);
-//            
-//            int[] list = {0, 100, 200};
-//            Triangle tri = new Triangle(a, b, c, list, .5f);
-//            Triangle[] tList = {tri};
-//            newInd = new Individual(tList, Solver.file.blank);
-//            
-//            int[] list2 = {200, 175, 150};
-//            Triangle tri2 = new Triangle(a, b, c, list2, .5f);
-//            Triangle tri3 = new Triangle(a2, b2, c2, list2, .5f);
-//            Triangle[] tList2 = {tri, tri3};
-//            Individual newInd2 = new Individual(tList2, Solver.file.blank);
-//
-//            population[0] = newInd;
-//            population[1] = newInd2;
-//            drawPopulation(0);
-//            
-//            
-//            Color color = new Color(newInd.img.getRGB(180, 180));
-//            int sRed = color.getRed();
-//            int sGreen = color.getGreen();
-//            int sBlue = color.getBlue();
-//            System.out.println(sRed + ", " + sGreen + ", " + sBlue);
-//            
-//            Color color2 = new Color(newInd2.img.getRGB(180, 180));
-//            int sRed2 = color2.getRed();
-//            int sGreen2 = color2.getGreen();
-//            int sBlue2 = color2.getBlue();
-//            System.out.println(sRed2 + ", " + sGreen2 + ", " + sBlue2);
-
-            
-            
-            
-            
-//            Triangle[] triangleList = new Triangle[triangles];
-//            for (int j = 0; j < triangles; j++) {
-//                triangleList[j] = getRandomTriangle();
-//            }
-
-        
-//            Individual newInd = mutateIndividual(population[0]);
-//            double fit = fitness(newInd);
-//            System.out.println("New fitness " + fit);
-//            if(fit > fitnessList[0]) {
-//                population[0] = newInd;
-//            }
-            
-            //                    population[0] = mutateIndividual(population[1]);
-
-//            if(fitnessList[0] > fitnessList[1]) {
-//                population[1] = mutateIndividual(population[0]);
-//
-//                // keep first, get new random for second
-//                for(int t = 0; t < population[1].t.length; t++) {
-//                    int[] newC = getNewColor(population[0].t[t].color);
-//                    population[1].t[t].color = newC;
-//                }
-//                population[1].update();
-//
-//            } else {
-//                population[0] = mutateIndividual(population[1]);
-//
-//                // keep second, get new random for first
-//                for(int t = 0; t < population[0].t.length; t++) {
-//                    int[] newC = getNewColor(population[1].t[t].color);
-//                    population[0].t[t].color = newC;
-//                }
-//                population[0].update();
-//            }
-            // somehow introduce a gradient towards the best color at a given pixel?
-
-            
-//            tournamentSelect();
-//            uniformCross();
-//            mutatePopulation();
-        //    evalFitness();
-            
-//            drawPopulation(g);
-            store.fitness = fitness(store);
-            System.out.println("HIHIStore's fitness is " + store.fitness);
-
-            System.out.println("FIRST ARE " + g + ":");
-            for(int i = 0; i < individuals; i++) {
-                System.out.println(fitnessList[i]);
-            }
-            
             evalFitness();
-            System.out.println("Fitnesses at beginning of " + g + ":");
-            for(int i = 0; i < individuals; i++) {
-                System.out.println(fitnessList[i]);
-            }
-            
+
+            // store best individual
             bestFitness = getBestFitness();
-            System.out.println("Best is " + bestFitness + "(" + fitnessList[bestFitness] + ")");
-            store = copyIndividual(population[bestFitness]);
-            store.fitness = fitness(store);
-            System.out.println("Store's fitness is " + store.fitness);
+            store = newCopyIndividual(population[bestFitness]);
+            store.fitness = fitnessList[bestFitness];
             
-//            tournamentSelect();
             boltzmannSelect();
 ////            drawBreedingPool(g);
             uniformCross();
             newMutatePopulation();
             evalFitness();
-
-            System.out.println("Fitnesses AFTER " + g + ":");
-            for(int i = 0; i < individuals; i++) {
-                System.out.println(fitnessList[i]);
-            }
+            
             // re-insert previous best fitness into worst-fitness position
             int worst = getWorstFitness();
-            System.out.println("Worst is " + worst + "(" + fitnessList[worst] + ")");
-            population[worst] = copyIndividual(store);
-            System.out.println("Just set, but now fitness is " + fitness(population[worst]) + " vs " + fitness(store));
+            population[worst] = newCopyIndividual(store);
             fitnessList[worst] = store.fitness;
-//            population[worst].update();
-            store.fitness = fitness(store);
-            System.out.println("Store's AFTER is " + store.fitness);
 
             
 //            drawPopulation(888);
@@ -961,25 +830,24 @@ public class GA {
                 // draw current solution
                 System.out.println("Best fitness is individual " + bestFitness + " with " + fitnessList[bestFitness]);
 
-                System.out.println("(Generation " + g + ")");
+                long genElapsed = System.currentTimeMillis() - genStart;
+                System.out.println("(Generation " + g + " took " + genElapsed + "ms)");
+
                 drawBest(bestFitness, g);
+                genStart = System.currentTimeMillis();
+                
+                for(int i = 0; i < individuals; i++) {
+                    System.out.println(fitnessList[i]);
+                }
             }
+
         }
+        
+        long totalElapsed = System.currentTimeMillis() - totalStart;
+        System.out.println("Done! " + generations + " generations took " + totalElapsed  / 100 + "s");
         
         System.out.println("Found on " + genFound);
         drawIndividual(bestInd);
-        
-//        Color color = new Color(Solver.file.image.getRGB(125, 170));
-//        int sRed = color.getRed();
-//        int sGreen = color.getGreen();
-//        int sBlue = color.getBlue();
-//        System.out.println(sRed + ", " + sGreen + ", " + sBlue);
-//        
-//        Color color2 = new Color(population[bestFitness].img.getRGB(125, 170));
-//        int red = color2.getRed();
-//        int green = color2.getGreen();
-//        int blue = color2.getBlue();
-//        System.out.println(red + ", " + green + ", " + blue);
         
 //        drawPopulation(generations);
 
