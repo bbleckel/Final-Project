@@ -20,6 +20,6 @@ public class Triangle {
         a.printSelf();
         b.printSelf();
         c.printSelf();
-        System.out.println("Color " + color);
+        System.out.println("Color " + color[0] + color[1] + color[2]);
     }
 }

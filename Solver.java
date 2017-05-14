@@ -16,6 +16,7 @@ public class Solver {
             System.out.println("    triangles    = number of triangles allotted to each individual (int)");
             System.out.println("    selection    = type of selection to use (int):");
             System.out.println("                     1     = tournament selection");
+            System.out.println("                     2     = Boltzmann selection");
 //            System.out.println("                            ts1 = same individual cannot compete against self");
 //            System.out.println("                            ts2 = same individual can compete against self");
 //            System.out.println("                     rs   = rank based selection");
@@ -46,7 +47,7 @@ public class Solver {
             System.out.println("fileName = " + fileName);
             file = new FileReader(fileName);
             pixels = file.pixels;
-            
+
             System.out.println("Solving with:\n" + individuals + " individuals\n" + triangles + " triangles\n" + pC + " pC\n" + pM + " pM\n" + generations + " generations\n");
 
             GA alg = new GA(individuals, triangles, selection, crossover, pC, pM, generations, file.width, file.height);
