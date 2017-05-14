@@ -17,11 +17,9 @@ public class GA {
     int crossover;
     int generations;
     
-    public static final float TRANSLUCENCY = .5f; // NOTE: CAN SET TRIANGLES INDIVIDUALLY Individual.java
-    
-    private final int COLOR_MUT_AMNT = 10;
-    private final float ALPHA_MUT_AMNT = .05f;
-    private final int MUT_AMNT = 5;
+    private final int COLOR_MUT_AMNT = 15;
+    private final float ALPHA_MUT_AMNT = .1f;
+    private final int MUT_AMNT = 20;
     
     // Image variables
     int imageWidth;
@@ -56,8 +54,8 @@ public class GA {
     public Triangle getRandomTriangle() {
         // returns a triangle with random coordinates and color
         
-        int randomWidth = ThreadLocalRandom.current().nextInt(0, imageWidth);
-        int randomHeight = ThreadLocalRandom.current().nextInt(0, imageHeight);
+        int randomWidth = ThreadLocalRandom.current().nextInt(0 - imageWidth / 10, 11 * imageWidth / 10);
+        int randomHeight = ThreadLocalRandom.current().nextInt(0 - imageHeight / 10, 11 * imageHeight / 10);
         Point a = new Point(randomWidth, randomHeight);
         
         randomWidth = ThreadLocalRandom.current().nextInt(0, imageWidth);
@@ -107,19 +105,6 @@ public class GA {
                 System.out.println("Error writing to file!");
                 System.exit(1);
             }
-            
-            // remove image (white background)
-            //    srcG.setBackground(new Color(255, 255, 255, 0));
-            //    srcG.clearRect(0, 0, imageWidth, imageHeight);
-            //    for(int j = 0; j < triangles; j++) {
-            //        addTriangle(population[i].t[j], Solver.file.blank);
-            //    }
-            //    try {
-            //        ImageIO.write(Solver.file.blank, "jpg", new File("./triangles-" + generation + "-" + i + ".jpg"));
-            //    } catch (Exception e) {
-            //        System.out.println("Error writing to file!");
-            //        System.exit(1);
-            //    }
         }
     }
     
@@ -143,20 +128,6 @@ public class GA {
             System.out.println("Error writing to file!");
             System.exit(1);
         }
-        //    Graphics2D srcG = Solver.file.blank.createGraphics();
-        //
-        //     remove image (white background)
-        //    srcG.setBackground(new Color(255, 255, 255, 0));
-        //    srcG.clearRect(0, 0, imageWidth, imageHeight);
-        //    for(int j = 0; j < triangles; j++) {
-        //        addTriangle(population[index].t[j], Solver.file.blank);
-        //    }
-        //    try {
-        //        ImageIO.write(Solver.file.blank, "jpg", new File("./triangles-best-" + generation + ".jpg"));
-        //    } catch (Exception e) {
-        //        System.out.println("Error writing to file!");
-        //        System.exit(1);
-        //    }
     }
     
     public void drawIndividual(Individual ind) {
@@ -168,45 +139,11 @@ public class GA {
         }
     }
     
-    public void addTriangle(Triangle t, BufferedImage img) {
-        // for testing: add a triangle
-        
-        Graphics2D g = img.createGraphics();
-        
-        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, TRANSLUCENCY));
-        
-        Color c = new Color(t.color[0], t.color[1], t.color[2]);
-        
-        g.setColor(c);
-        
-        g.fillPolygon(new int[] {t.a.X, t.b.X, t.c.X}, new int[] {t.a.Y, t.b.Y, t.c.Y}, 3);
-        g.dispose();
-        
-    }
-    
     public void printPopulation() {
         for(int i = 0; i < individuals; i++) {
             //    population[i].t.printSelf();
         }
     }
-    
-    // public void onePCross() {
-    //
-    //     for(int i = 0; i < individuals; i++) {
-    //         double rand = ThreadLocalRandom.current().nextDouble(0, 1);
-    //
-    //         Individual parent1 = breedingPool[i];
-    //         Individual parent2;
-    //
-    //         Triangle[] tList = new Triangle[triangles];
-    //         if(rand < pC) { // doing crossover
-    //
-    //         } else {
-    //
-    //         }
-    //
-    //     }
-    // }
     
     public void uniformCross() {
         for(int i = 0; i < individuals; i++) {
@@ -255,7 +192,7 @@ public class GA {
                     
                     // select color
                     prob = ThreadLocalRandom.current().nextDouble(0, 1);
-                    if(prob < 0.7) {
+                    if(prob < 0.5) {
                         t.color = parent1.t[j].color;
                     } else {
                         t.color = parent2.t[j].color;
@@ -263,7 +200,7 @@ public class GA {
                     
                     // select alpha
                     prob = ThreadLocalRandom.current().nextDouble(0, 1);
-                    if(prob < 0.7) {
+                    if(prob < 0.5) {
                         t.alpha = parent1.t[j].alpha;
                     } else {
                         t.alpha = parent2.t[j].alpha;
@@ -276,8 +213,8 @@ public class GA {
                 //                population[i] = newCopyIndividual(offspring);
                 population[i] = offspring;
             } else { // crossover will not occur
-                //                Individual offspring = newCopyIndividual(breedingPool[i]);
-                Individual offspring = breedingPool[i];
+                Individual offspring = newCopyIndividual(breedingPool[i]);
+//                Individual offspring = breedingPool[i];
                 //                population[i] = newCopyIndividual(offspring);
                 population[i] = offspring;
             }
@@ -298,7 +235,7 @@ public class GA {
                 prob += Math.exp(fitnessList[j]) / total;
                 if(prob > rand) {
                     breedingPool[i] = population[j];
-                    //                    breedingPool[i] = newCopyIndividual(population[j]);
+//                    breedingPool[i] = newCopyIndividual(population[j]);
                     break;
                 }
             }
@@ -375,11 +312,11 @@ public class GA {
         //            }
         //        } else {
         // shift both X and Y
-        if(p.X + direction * MUT_AMNT >= imageWidth || p.X + direction * MUT_AMNT < 0) {
-            p.X += -direction * MUT_AMNT;
-        } else {
+//        if(p.X + direction * MUT_AMNT >= imageWidth || p.X + direction * MUT_AMNT < 0) {
+//            p.X += -direction * MUT_AMNT;
+//        } else {
             p.X += direction * MUT_AMNT;
-        }
+//        }
         
         // re-determine direction for Y
         dir = ThreadLocalRandom.current().nextDouble(0, 1);
@@ -389,11 +326,11 @@ public class GA {
             direction = -1;
         }
         
-        if(p.Y + direction * MUT_AMNT >= imageHeight || p.Y + direction * MUT_AMNT < 0) {
-            p.Y += -direction * MUT_AMNT;
-        } else {
+//        if(p.Y + direction * MUT_AMNT >= imageHeight || p.Y + direction * MUT_AMNT < 0) {
+//            p.Y += -direction * MUT_AMNT;
+//        } else {
             p.Y += direction * MUT_AMNT;
-        }
+//        }
         //        }
         
         return p;
@@ -773,6 +710,9 @@ public class GA {
     }
     
     public void solveGA() {
+        
+        // give individuals background colors??
+        
         System.out.println("Solving GA...");
         double bestValue = -1;
         int genFound = -1;
@@ -788,10 +728,6 @@ public class GA {
         long genStart = System.currentTimeMillis();
         
         for(int g = 0; g < generations; g++) {
-            // draw each individual first
-            if(drawIndividuals) {
-                //    drawPopulation(g);
-            }
             
             evalFitness();
             
@@ -801,7 +737,6 @@ public class GA {
             store.fitness = fitnessList[bestFitness];
             
             boltzmannSelect();
-            ////            drawBreedingPool(g);
             uniformCross();
             newMutatePopulation();
             evalFitness();
@@ -810,8 +745,6 @@ public class GA {
             int worst = getWorstFitness();
             population[worst] = newCopyIndividual(store);
             fitnessList[worst] = store.fitness;
-            
-            //    drawPopulation(888);
             
             bestFitness = getBestFitness();
             
@@ -831,6 +764,8 @@ public class GA {
                 drawBest(bestFitness, g);
                 genStart = System.currentTimeMillis();
                 
+//                drawPopulation(g);
+                
                 for(int i = 0; i < individuals; i++) {
                     System.out.println(fitnessList[i]);
                 }
@@ -839,7 +774,7 @@ public class GA {
         }
         
         long totalElapsed = System.currentTimeMillis() - totalStart;
-        System.out.println("Done! " + generations + " generations took " + totalElapsed  / 100 + "s");
+        System.out.println("Done! " + generations + " generations took " + totalElapsed  / 1000 + "s");
         
         System.out.println("Found on " + genFound);
         drawIndividual(bestInd);
