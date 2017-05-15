@@ -594,26 +594,26 @@ public class GA {
                 bestInd = copyIndividual(population[0]);
             }
 
+            long totalElapsed = System.currentTimeMillis() - totalStart;
+            if (totalElapsed/1000 > 60) {
+                drawBest(bestFitness, g);
+                System.out.println("Total time restraint hit (" + g + " generations). Returning best: " + fitnessList[bestFitness]);
+                return 1 - fitnessList[bestFitness];
+            }
+
             if((generations - g) % 100 == 0) {
                 // draw current solution
-                System.out.println("Best fitness is individual " + bestFitness + " with " + fitnessList[bestFitness]);
-
-                long genElapsed = System.currentTimeMillis() - genStart;
-                System.out.println("(Generation " + g + " took " + genElapsed + "ms)");
+                // System.out.println("Best fitness is individual " + bestFitness + " with " + fitnessList[bestFitness]);
+                //
+                // long genElapsed = System.currentTimeMillis() - genStart;
+                // System.out.println("(Generation " + g + " took " + genElapsed + "ms)");
 
                 drawBest(bestFitness, g);
                 genStart = System.currentTimeMillis();
 
-                for(int i = 0; i < individuals; i++) {
-                    System.out.println(fitnessList[i]);
-                }
-
-
-                long totalElapsed = System.currentTimeMillis() - totalStart;
-                if (totalElapsed/1000 > 60) {
-                    System.out.println("Total time restraint hit. Returning best: " + fitnessList[bestFitness]);
-                    return 1 - fitnessList[bestFitness];
-                }
+                // for(int i = 0; i < individuals; i++) {
+                //     System.out.println(fitnessList[i]);
+                // }
             }
 
         }
@@ -626,6 +626,7 @@ public class GA {
         drawIndividual(bestInd);
 
         //        drawPopulation(generations);
+        System.out.println("Total generations (" + generations + ") hit. Returning best: " + fitnessList[bestFitness]);
         return 1 - fitnessList[bestFitness];
     }
 }
