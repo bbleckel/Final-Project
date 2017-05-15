@@ -106,7 +106,7 @@ public class GA {
                 System.out.println("Error writing to file!");
                 System.exit(1);
             }
-            
+
         }
     }
 
@@ -125,7 +125,7 @@ public class GA {
     }
     public void drawBest(int index, int generation) {
         try {
-            ImageIO.write(population[index].img, "jpg", new File("./triangles-best-" + generation + ".jpg"));
+            ImageIO.write(population[index].rescale(), "jpg", new File("./triangles-best-" + generation + ".jpg"));
         } catch (Exception e) {
             System.out.println("Error writing to file!");
             System.exit(1);
