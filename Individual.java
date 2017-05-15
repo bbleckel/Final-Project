@@ -41,8 +41,7 @@ public class Individual {
         srcG.dispose();
     }
 
-    public BufferedImage rescale() {
-        int size = 10;
+    public BufferedImage rescale(int size) {
         BufferedImage rescaled = new BufferedImage(img.getWidth()*size, img.getHeight()*size, BufferedImage.TYPE_INT_RGB);
 
         Graphics2D srcG = rescaled.createGraphics();
