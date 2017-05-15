@@ -8,7 +8,6 @@ import javax.swing.JFrame;
 
 public class Individual {
     Triangle[] t;
-    Vector<Point> points;
     BufferedImage img;
     double fitness;
 //    BufferedImage img;

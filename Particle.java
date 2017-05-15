@@ -8,7 +8,8 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 public class Particle {
-    int IDCounter;
+    //static, thus accessible to all instances of the class
+    static int IDCounter;
 
 	Vector<Double> velocity;
 	Vector<Double> position;
@@ -20,26 +21,88 @@ public class Particle {
 	// unique ID's allow isEqual
 	int ID;
 
+    /****   Dimension order:
+                individuals
+                triangles
+                pC
+                pM
+                alpha mutate amount
+                color mutate amount
+                point (x,y) mutate amount
+    */
+    /****   Initial value ranges:
+                individuals: 2-10
+                triangles: 4-100
+                pC: 0-1 (double)
+                pM: 0-1 (double)
+                alpha mutate amount: 0-1
+                color mutate amount: 1-20
+                point (x,y) mutate amount: 10%-20% of image siz (width, height)
+    */
+    public int[] individualInitList = {2, 10};
+    public int[] triangleInitList = {4, 100};
+    public double[] pCInitList = {0.0, 1.0};
+    public double[] pMInitList = {0.0, 1.0};
+    public double[] alphaInitList = {0.0, 1.0};
+    public int[] colorInitList = {1, 20};
+    public double[] pointInitList = {0.1, 0.2};
+
+    private int[] MAX_VEL_RAND_VALUE = {2, 4, 4};
+    private int MIN_VEL_RAND_VALUE = -2;
+
     public Particle(int dimension) {
         pBestValue = Integer.MAX_VALUE;
     	ID = IDCounter;
     	IDCounter++;
+        
+        velocity = new Vector<Double>(0);
+    	position = new Vector<Double>(0);
+
+    	pBest = new Vector<Double>(0);
 
     	for (int i = 0; i < dimension; i++) {
-    		// generate random value within specified range for each function
-            // NEEDS TO BE CHANGED TO BE ADAPTED TO THIS PROBLEM
-
-            double velRandom = ThreadLocalRandom.current().nextInt(15, 30);
-    		// double velRandom = (rand() % (MAX_VEL_RAND_VALUE[function] - MIN_VEL_RAND_VALUE + 1)) + MIN_VEL_RAND_VALUE;
-
-    		double total = 30 - 15;
-    		double ratio = ThreadLocalRandom.current().nextDouble(0, 1);
-    		double posRandom = total * ratio + 15;
-
+    		// generate random velocity values
+            double velRandom = ThreadLocalRandom.current().nextInt(MIN_VEL_RAND_VALUE, MAX_VEL_RAND_VALUE[0]);
     		velocity.add(velRandom);
-    		pBest.add(posRandom);
-    		position.add(posRandom);
     	}
+
+        //Individuals
+        double total = individualInitList[1] - individualInitList[0];
+        double ratio = ThreadLocalRandom.current().nextDouble(0, 1);
+        double posRandom = total * ratio + individualInitList[0];
+		pBest.add(posRandom);
+        position.add(posRandom);
+        //Triangles
+        total = triangleInitList[1] - triangleInitList[0];
+        ratio = ThreadLocalRandom.current().nextDouble(0, 1);
+        posRandom = total * ratio + triangleInitList[0];
+		pBest.add(posRandom);
+        position.add(posRandom);
+        //Probability of Crossover
+        posRandom = ThreadLocalRandom.current().nextDouble(0, 1);
+		pBest.add(posRandom);
+        position.add(posRandom);
+        //Probability of Mutation
+        posRandom = ThreadLocalRandom.current().nextDouble(0, 1);
+		pBest.add(posRandom);
+        position.add(posRandom);
+        //Alpha Mutation Amount
+        posRandom = ThreadLocalRandom.current().nextDouble(0, 1);
+		pBest.add(posRandom);
+        position.add(posRandom);
+        //Color Mutation Amount
+        total = colorInitList[1] - colorInitList[0];
+        ratio = ThreadLocalRandom.current().nextDouble(0, 1);
+        posRandom = total * ratio + colorInitList[0];
+		pBest.add(posRandom);
+        position.add(posRandom);
+        //Point (x,y) Mutation Amount
+        total = pointInitList[1] - pointInitList[0];
+        ratio = ThreadLocalRandom.current().nextDouble(0, 1);
+        posRandom = total * ratio + pointInitList[0];
+		pBest.add(posRandom);
+        position.add(posRandom);
+
     }
 
     public boolean isEqual(Particle p) {

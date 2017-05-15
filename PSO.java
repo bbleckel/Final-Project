@@ -8,7 +8,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 public class PSO {
-    // need to be able to access this from the tester
+    // need to be able to access this from the solver, thus not private
 	double gBestValue;
 
 	private int swarmSize;
@@ -18,10 +18,9 @@ public class PSO {
 	private Vector<Double> gBest;
 	private Vector<Neighborhood> neighborhoodList;
 
-	private double constrict;
+	private final static double constrict = 0.7298;
 	private double nBest;
 	private int neighborhood;
-	private int function;
 	private Vector<Particle> swarm;
 
     /****   Dimension order:
@@ -42,33 +41,65 @@ public class PSO {
                 color mutate amount: 1-20
                 point (x,y) mutate amount: 10%-20% of image siz (width, height)
     */
-    private int[] individualInitList = {2, 10};
-    private int[] triangleInitList = {4, 100};
-    private double[] pCInitList = {0.0, 1.0};
-    private double[] pMInitList = {0.0, 1.0};
-    private double[] alphaInitList = {0.0, 1.0};
-    private int[] colorInitList = {1, 20};
-    private double[] pointInitList = {0.1, 0.2};
+    public int[] individualInitList = {2, 10};
+    public int[] triangleInitList = {4, 100};
+    public double[] pCInitList = {0.0, 1.0};
+    public double[] pMInitList = {0.0, 1.0};
+    public double[] alphaInitList = {0.0, 1.0};
+    public int[] colorInitList = {1, 20};
+    public double[] pointInitList = {0.1, 0.2};
 
     private double PHI_1 = 2.05;
     private double PHI_2 = 2.05;
 
-    public PSO(int neighborhood, int swarmSize, int iterations, int function, int dimension) {
+	private static final int selection = 2;
+	private static final int crossover = 1;
+	private static final int generations = 50;
+	private static String fileName;
+	private static FileReader file;
+
+    public PSO(int neighborhood, int swarmSize, int iterations, String fileName) {
         this.neighborhood = neighborhood;
     	this.swarmSize = swarmSize;
     	this.iterations = iterations;
-    	this.function = function;
-    	this.dimension = dimension;
-    	constrict = 0.7298;
+    	this.dimension = 7;
+		this.fileName = fileName;
+		file = new FileReader(fileName);
     	gBestValue = Integer.MAX_VALUE;
 
-    	for(int i = 0; i < dimension; i++) {
-    		// fill gBest with random viable values
-    		double total = 30 - 15;
-    		double ratio = ThreadLocalRandom.current().nextDouble(0, 1);
-    		double posRandom = total * ratio + 15;
-    		gBest.add(posRandom);
-    	}
+		gBest = new Vector<Double>(0);
+		swarm = new Vector<Particle>(0);
+		neighborhoodList = new Vector<Neighborhood>(0);
+
+        //Individuals
+        double total = individualInitList[1] - individualInitList[0];
+        double ratio = ThreadLocalRandom.current().nextDouble(0, 1);
+        double posRandom = total * ratio + individualInitList[0];
+        gBest.add(posRandom);
+        //Triangles
+        total = triangleInitList[1] - triangleInitList[0];
+        ratio = ThreadLocalRandom.current().nextDouble(0, 1);
+        posRandom = total * ratio + triangleInitList[0];
+        gBest.add(posRandom);
+        //Probability of Crossover
+        posRandom = ThreadLocalRandom.current().nextDouble(0, 1);
+        gBest.add(posRandom);
+        //Probability of Mutation
+        posRandom = ThreadLocalRandom.current().nextDouble(0, 1);
+        gBest.add(posRandom);
+        //Alpha Mutation Amount
+        posRandom = ThreadLocalRandom.current().nextDouble(0, 1);
+        gBest.add(posRandom);
+        //Color Mutation Amount
+        total = colorInitList[1] - colorInitList[0];
+        ratio = ThreadLocalRandom.current().nextDouble(0, 1);
+        posRandom = total * ratio + colorInitList[0];
+        gBest.add(posRandom);
+        //Point (x,y) Mutation Amount
+        total = pointInitList[1] - pointInitList[0];
+        ratio = ThreadLocalRandom.current().nextDouble(0, 1);
+        posRandom = total * ratio + pointInitList[0];
+        gBest.add(posRandom);
     }
 
 	/* veloctiy and position updates */
@@ -107,7 +138,7 @@ public class PSO {
         int k = 5;
 
         for (int i = 0; i < swarmSize; i++) {
-            Neighborhood temp = new Neighborhood(function, dimension);
+            Neighborhood temp = new Neighborhood(dimension);
             // particle is in its own neighborhood
             temp.add(swarm.get(i));
             for (int j = 0; j < k - 1; j++) {
@@ -174,6 +205,23 @@ public class PSO {
         /******************************************************/
         /* CALL GA HERE AND RETURN VALUE THAT YOU GET TO PVAL */
         /******************************************************/
+		// individuals
+        // triangles
+        // pC
+        // pM
+        // alpha mutate amount
+        // color mutate amount
+        // point (x,y) mutate amount
+		int individuals = p.position.get(0).intValue();
+		int triangles = p.position.get(1).intValue();
+		double pC = p.position.get(2);
+		double pM = p.position.get(3);
+		double alpha = p.position.get(4);
+		int color =  p.position.get(5).intValue();
+		double point = p.position.get(6);
+        GA alg = new GA(individuals, triangles, selection, crossover, pC, pM, generations, file.width, file.height, alpha, color, point);
+
+		pVal = 1 - alg.solveGA();
 
     	//update the personal best value if necessary
     	if (pVal < p.pBestValue) {
@@ -201,13 +249,14 @@ public class PSO {
 	public void initializeSwarm() {
         // create swarm of 'swarmSize' particles
     	for (int i = 0; i < swarmSize; i++) {
-    		Particle newParticle = new Particle(function);
+    		Particle newParticle = new Particle(dimension);
     		swarm.add(newParticle);
     	}
     }
 
 	/* general algorithm controller */
 	public Vector<Double> solvePSO() {
+		System.out.println("Solving PSO...");
     	Vector<Double> vect = new Vector<Double>();
 
     	initializeSwarm();
@@ -230,6 +279,7 @@ public class PSO {
     		// }
     		// when testing a single input, use this
     		// cout << "gBest = " << gBestValue << endl;
+			System.out.println("gBest = :" + (1 - gBestValue));
     		if (iterRemaining != 10000) {
     			if (iterRemaining % 1000 == 0 || iterRemaining == 9500) {
     				vect.add(gBestValue);

@@ -17,9 +17,9 @@ public class GA {
     int crossover;
     int generations;
 
-    private final int COLOR_MUT_AMNT = 15;
-    private final float ALPHA_MUT_AMNT = .1f;
-    private final int MUT_AMNT = 20;
+    private int COLOR_MUT_AMNT = 15;
+    private double ALPHA_MUT_AMNT = 0.1;
+    private int MUT_AMNT = 20;
 
     // Image variables
     int imageWidth;
@@ -30,7 +30,7 @@ public class GA {
     BufferedImage bestImg;
     boolean drawIndividuals;
 
-    public GA(int individuals, int triangles, int selection, int crossover, double pC, double pM, int generations, int width, int height) {
+    public GA(int individuals, int triangles, int selection, int crossover, double pC, double pM, int generations, int width, int height, double alphaAmt, int colorAmt, double pointAmt) {
         this.individuals = individuals;
         this.triangles = triangles;
         this.selection = selection;
@@ -38,6 +38,10 @@ public class GA {
         this.pC = pC;
         this.pM = pM;
         this.generations = generations;
+
+        MUT_AMNT = (int)(pointAmt * imageHeight);
+        COLOR_MUT_AMNT = colorAmt;
+        ALPHA_MUT_AMNT = alphaAmt;
 
         imageWidth = width;
         imageHeight = height;
@@ -134,7 +138,7 @@ public class GA {
 
     public void drawIndividual(Individual ind) {
         try {
-            ImageIO.write(ind.rescale(10), "jpg", new File("./triangles-individual.jpg"));
+            ImageIO.write(ind.rescale(20), "jpg", new File("./triangles-individual.jpg"));
         } catch (Exception e) {
             System.out.println("Error writing to file!");
             System.exit(1);
@@ -510,7 +514,7 @@ public class GA {
         }
     }
 
-    public void solveGA() {
+    public double solveGA() {
 
         // give individuals background colors??
 
@@ -580,6 +584,6 @@ public class GA {
         drawIndividual(bestInd);
 
         //        drawPopulation(generations);
-
+        return fitnessList[bestFitness];
     }
 }

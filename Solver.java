@@ -50,8 +50,11 @@ public class Solver {
 
             System.out.println("Solving with:\n" + individuals + " individuals\n" + triangles + " triangles\n" + pC + " pC\n" + pM + " pM\n" + generations + " generations\n");
 
-            GA alg = new GA(individuals, triangles, selection, crossover, pC, pM, generations, file.width, file.height);
-            alg.solveGA();
+            // GA alg = new GA(individuals, triangles, selection, crossover, pC, pM, generations, file.width, file.height);
+            // alg.solveGA();
+
+            PSO alg = new PSO(3, 20, 50, fileName);
+            Vector<Double> results = alg.solvePSO();
 
 
 //            System.out.println("Found " + pixels.length * pixels[0].length + " pixels");
