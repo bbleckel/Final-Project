@@ -54,7 +54,7 @@ public class Particle {
         pBestValue = Integer.MAX_VALUE;
     	ID = IDCounter;
     	IDCounter++;
-        
+
         velocity = new Vector<Double>(0);
     	position = new Vector<Double>(0);
 
@@ -62,7 +62,7 @@ public class Particle {
 
     	for (int i = 0; i < dimension; i++) {
     		// generate random velocity values
-            double velRandom = ThreadLocalRandom.current().nextInt(MIN_VEL_RAND_VALUE, MAX_VEL_RAND_VALUE[0]);
+            double velRandom = ThreadLocalRandom.current().nextDouble(MIN_VEL_RAND_VALUE, 0.5);
     		velocity.add(velRandom);
     	}
 

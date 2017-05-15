@@ -19,7 +19,7 @@ public class GA {
 
     private int COLOR_MUT_AMNT = 15;
     private double ALPHA_MUT_AMNT = 0.1;
-    private int MUT_AMNT = 20;
+    private double MUT_AMNT = 20;
 
     // Image variables
     int imageWidth;
@@ -39,12 +39,15 @@ public class GA {
         this.pM = pM;
         this.generations = generations;
 
-        MUT_AMNT = (int)(pointAmt * imageHeight);
-        COLOR_MUT_AMNT = colorAmt;
-        ALPHA_MUT_AMNT = alphaAmt;
-
         imageWidth = width;
         imageHeight = height;
+
+        MUT_AMNT = pointAmt * imageHeight;
+        COLOR_MUT_AMNT = colorAmt;
+        ALPHA_MUT_AMNT = alphaAmt;
+        if (individuals < 0) {
+            return;
+        }
         population = new Individual[individuals];
         fitnessList = new double[individuals];
         breedingPool = new Individual[individuals];
@@ -515,6 +518,38 @@ public class GA {
     }
 
     public double solveGA() {
+        /*
+            Check if any parameters are out of bounds.
+            If so, return 100 so that the PSO will go away from this value
+        */
+        if (triangles <= 1) {
+            // System.out.println("triangles");
+            return 100;
+        }
+        if (individuals <= 1) {
+            // System.out.println("individuals");
+            return 100;
+        }
+        if (pC >= 1 || pC <= 0) {
+            // System.out.println("pC");
+            return 100;
+        }
+        if (pM >= 1 || pM <= 0) {
+            // System.out.println("pM");
+            return 100;
+        }
+        if (ALPHA_MUT_AMNT >= 1 || ALPHA_MUT_AMNT <= 0) {
+            // System.out.println("alpha");
+            return 100;
+        }
+        if (MUT_AMNT <= 0) {
+            // System.out.println("point: " + MUT_AMNT + ", imageHeight: " + imageHeight);
+            return 100;
+        }
+        if (COLOR_MUT_AMNT >= 100 || COLOR_MUT_AMNT <= 0) {
+            // System.out.println("color");
+            return 100;
+        }
 
         // give individuals background colors??
 
@@ -572,6 +607,13 @@ public class GA {
                 for(int i = 0; i < individuals; i++) {
                     System.out.println(fitnessList[i]);
                 }
+
+
+                long totalElapsed = System.currentTimeMillis() - totalStart;
+                if (totalElapsed/1000 > 60) {
+                    System.out.println("Total time restraint hit. Returning best: " + fitnessList[bestFitness]);
+                    return 1 - fitnessList[bestFitness];
+                }
             }
 
         }
@@ -584,6 +626,6 @@ public class GA {
         drawIndividual(bestInd);
 
         //        drawPopulation(generations);
-        return fitnessList[bestFitness];
+        return 1 - fitnessList[bestFitness];
     }
 }

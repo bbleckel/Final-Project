@@ -54,7 +54,7 @@ public class PSO {
 
 	private static final int selection = 2;
 	private static final int crossover = 1;
-	private static final int generations = 50;
+	private static final int generations = 5000;
 	private static String fileName;
 	private static FileReader file;
 
@@ -214,14 +214,15 @@ public class PSO {
         // point (x,y) mutate amount
 		int individuals = p.position.get(0).intValue();
 		int triangles = p.position.get(1).intValue();
-		double pC = p.position.get(2);
-		double pM = p.position.get(3);
-		double alpha = p.position.get(4);
+		double pC = (p.position.get(2))/100;
+		double pM = (p.position.get(3))/100;
+		double alpha = (p.position.get(4))/100;
 		int color =  p.position.get(5).intValue();
-		double point = p.position.get(6);
+		double point = (p.position.get(6))/100;
+		// System.out.println("Calling GA with individuals: " + individuals + ", triangles: " + triangles + ", pC: " + pC + ", pM: " + pM + ", alpha: " + alpha + ", color: " + color + ", point: " + point);
         GA alg = new GA(individuals, triangles, selection, crossover, pC, pM, generations, file.width, file.height, alpha, color, point);
 
-		pVal = 1 - alg.solveGA();
+		pVal = alg.solveGA();
 
     	//update the personal best value if necessary
     	if (pVal < p.pBestValue) {
@@ -279,12 +280,8 @@ public class PSO {
     		// }
     		// when testing a single input, use this
     		// cout << "gBest = " << gBestValue << endl;
-			System.out.println("gBest = :" + (1 - gBestValue));
-    		if (iterRemaining != 10000) {
-    			if (iterRemaining % 1000 == 0 || iterRemaining == 9500) {
-    				vect.add(gBestValue);
-    			}
-    		}
+			System.out.println("gBest = " + (1 - gBestValue) + " iteration " + (iterations - iterRemaining) + " \n");
+			vect.add(gBestValue);
 
     		iterRemaining--;
     	}
