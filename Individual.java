@@ -23,7 +23,7 @@ public class Individual {
         // for what each type int means
 
         Graphics2D srcG = img.createGraphics();
-        
+
         // remove image (white background)
         srcG.setBackground(new Color(255, 255, 255, 0));
         srcG.clearRect(0, 0, source.getWidth(), source.getHeight());
@@ -39,6 +39,29 @@ public class Individual {
             srcG.fillPolygon(new int[] {t[i].a.X, t[i].b.X, t[i].c.X}, new int[] {t[i].a.Y, t[i].b.Y, t[i].c.Y}, 3);
         }
         srcG.dispose();
+    }
+
+    public BufferedImage rescale() {
+        int size = 10;
+        BufferedImage rescaled = new BufferedImage(img.getWidth()*size, img.getHeight()*size, BufferedImage.TYPE_INT_RGB);
+
+        Graphics2D srcG = rescaled.createGraphics();
+
+        srcG.setBackground(new Color(255, 255, 255, 0));
+        srcG.clearRect(0, 0, img.getWidth()*size, img.getHeight()*size);
+
+        // redraw triangles to image
+        for(int i = 0; i < t.length; i++) {
+            // set opacity
+            srcG.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, t[i].alpha));
+
+            Color c = new Color(t[i].color[0], t[i].color[1], t[i].color[2]);
+            srcG.setColor(c);
+            srcG.fillPolygon(new int[] {t[i].a.X*size, t[i].b.X*size, t[i].c.X*size}, new int[] {t[i].a.Y*size, t[i].b.Y*size, t[i].c.Y*size}, 3);
+        }
+        srcG.dispose();
+
+        return rescaled;
     }
 
     public void update() {
@@ -60,15 +83,3 @@ public class Individual {
         srcG.dispose();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
