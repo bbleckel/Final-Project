@@ -108,7 +108,7 @@ public class GA {
 
         for(int i = 0; i < individuals; i++) {
             try {
-                ImageIO.write(population[i].rescale(4), "jpg", new File("./heart2/triangles-" + generation + "-" + i + ".jpg"));
+                ImageIO.write(population[i].rescale(4), "jpg", new File("./triangles-" + generation + "-" + i + ".jpg"));
             } catch (Exception e) {
                 System.out.println("Error writing to file!");
                 System.exit(1);
@@ -123,7 +123,7 @@ public class GA {
 
         for(int i = 0; i < individuals; i++) {
             try {
-                ImageIO.write(breedingPool[i].img, "jpg", new File("./heart2/triangles-breeding-" + generation + "-" + i + ".jpg"));
+                ImageIO.write(breedingPool[i].img, "jpg", new File("./triangles-breeding-" + generation + "-" + i + ".jpg"));
             } catch (Exception e) {
                 System.out.println("Error writing to file!");
                 System.exit(1);
@@ -132,7 +132,7 @@ public class GA {
     }
     public void drawBest(int index, int generation) {
         try {
-            ImageIO.write(population[index].rescale(10), "jpg", new File("./heart2/triangles-best-" + generation + ".jpg"));
+            ImageIO.write(population[index].rescale(10), "jpg", new File("./triangles-best-" + generation + ".jpg"));
         } catch (Exception e) {
             System.out.println("Error writing to file!");
             System.exit(1);
@@ -141,7 +141,7 @@ public class GA {
 
     public void drawIndividual(Individual ind) {
         try {
-            ImageIO.write(ind.rescale(20), "jpg", new File("./heart2/triangles-individual.jpg"));
+            ImageIO.write(ind.rescale(20), "jpg", new File("./triangles-individual.jpg"));
         } catch (Exception e) {
             System.out.println("Error writing to file!");
             System.exit(1);
