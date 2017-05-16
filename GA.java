@@ -538,7 +538,7 @@ public class GA {
             // System.out.println("pM");
             return 100;
         }
-        if (ALPHA_MUT_AMNT >= 1 || ALPHA_MUT_AMNT <= 0) {
+        if (ALPHA_MUT_AMNT >= 0.7 || ALPHA_MUT_AMNT <= 0) {
             // System.out.println("alpha");
             return 100;
         }
@@ -554,6 +554,7 @@ public class GA {
         // give individuals background colors??
 
         System.out.println("Solving GA...");
+        System.out.println("Solving with:\n" + individuals + " individuals\n" + triangles + " triangles\n" + pC + " pC\n" + pM + " pM\n" + ALPHA_MUT_AMNT + " alpha mutatation amount\n" + MUT_AMNT + " point (x,y) mutation amount\n" + COLOR_MUT_AMNT + " color mutation amount");
         double bestValue = -1;
         int genFound = -1;
         initPopulation();
