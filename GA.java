@@ -401,7 +401,7 @@ public class GA {
                     }
                     if(!(tList[j].alpha + direction * ALPHA_MUT_AMNT > 1f || tList[j].alpha + direction * ALPHA_MUT_AMNT < 0)) {
                         tList[j].alpha += direction * ALPHA_MUT_AMNT;
-                    } else if((!tList[j].alpha - direction * ALPHA_MUT_AMNT > 1f || tList[j].alpha - direction * ALPHA_MUT_AMNT < 0)) {
+                    } else if(!(tList[j].alpha - direction * ALPHA_MUT_AMNT > 1f || tList[j].alpha - direction * ALPHA_MUT_AMNT < 0)) {
                         tList[j].alpha -= direction * ALPHA_MUT_AMNT;
                     }
                 }
