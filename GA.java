@@ -99,7 +99,7 @@ public class GA {
             //    }
 
         }
-        System.out.println("Created population with " + individuals + " individuals!");
+        System.out.println("Created population with " + individuals + " individuals and " + triangles + " triangles!");
     }
 
     public void drawPopulation(int generation) {
