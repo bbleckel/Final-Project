@@ -37,7 +37,7 @@ public class Particle {
                 pM: 0-1 (double)
                 alpha mutate amount: 0-1
                 color mutate amount: 1-20
-                point (x,y) mutate amount: 10%-20% of image siz (width, height)
+                point (x,y) mutate amount: 10%-20% of image size (width, height)
     */
     public int[] individualInitList = {2, 10};
     public int[] triangleInitList = {4, 100};
