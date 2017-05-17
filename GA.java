@@ -592,15 +592,15 @@ public class GA {
             if(fitnessList[bestFitness] > bestValue) {
                 genFound = g + 1;
                 bestValue = fitnessList[bestFitness];
-                bestInd = copyIndividual(population[0]);
+                bestInd = copyIndividual(population[bestFitness]);
             }
 
             long totalElapsed = System.currentTimeMillis() - totalStart;
-            if (totalElapsed/1000 > 60) {
-                drawBest(bestFitness, g);
-                System.out.println("Total time restraint hit (" + g + " generations). Returning best: " + fitnessList[bestFitness]);
-                return 1 - fitnessList[bestFitness];
-            }
+//            if (totalElapsed/1000 > 60) {
+//                drawBest(bestFitness, g);
+//                System.out.println("Total time restraint hit (" + g + " generations). Returning best: " + fitnessList[bestFitness]);
+//                return 1 - fitnessList[bestFitness];
+//            }
 
             if((generations - g) % 100 == 0) {
                 // draw current solution
