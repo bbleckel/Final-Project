@@ -7,36 +7,45 @@ Bowdoin College
 
 This program uses Particle Swarm Optimization (PSO) to optimize the parameters on a
     Genetic Algorithm (GA) performing Image Reproduction (IR).
-The goal of this program is to implement 
-A detailed explanation of digit recognition, Neural Networks, our methods, and our results are in the
-    included paper entitled NN.pdf.
-The main.cpp file deals with the testing and parsing the command line.
+The goal of this program is to look at how effective PSO can be in optimizing parameters.
+A detailed explanation of image reproduction, PSO, GAs, our methods, and our results are in the
+    included paper entitled PSO-GA.pdf.
+The Solver.java deals with parsing the command line and calling either PSO or GA.
 The command line arguments are as follows, in the order presented:
 
-For Digit Recognition with a Neural Network:
-./main trainingFile testFile type inputNodes outputNodes epochs learningRate
-    trainingFile   = name of training file from which to read (string):
-    testFile       = name of test file from which to read (string)
-    type           = 32x32 bitmap or 8x8 down-sampled image (32 or 8, int)
-    inputNodes     = number of input nodes (1024 or 64, int)
-    outputNodes    = number of output nodes (1 or 10, int)
-    epochs         = number of epochs (iterations) to perform (int)
-    learningRate   = learning rate for network (double)
+For just running the GA:
+java Solver fileName individuals triangles selection crossover pC pM generations
+    fileName     = name of image file to re-create (string)
+    individuals  = number of individuals in population (int)
+    triangles    = number of triangles allotted to each individual (int)
+    selection    = type of selection to use (int):
+                     1     = tournament selection
+                     2     = Boltzmann selection
+    crossover    = crossover method (int):
+                        1   = uniform crossover
+    pC           = crossover probability (double)
+    pM           = mutation probability (double)
+    generations  = max number of generations to run (int)
+
+For running the PSO on the GA:
+java Solver fileName particles iterations
+    fileName     = name of image file to re-create (string)
+    particles    = number of particles in swarm (int)
+    iterations   = number of iterations for the PSO to run (int)
+
 SAMPLE INPUTS:
-./main 32x32-bitmaps/optdigits-32x32.tra 32x32-bitmaps/optdigits-32x32.tes 32 1024 10 50 0.01
-./main 8x8-integer-inputs/optdigits-8x8-int.tra 8x8-integer-inputs/optdigits-8x8-int.tes 8 64 10 50 0.01
+For GA:
+java Solver Images/hamburger.png 4 20 2 1 0.4 0.1 5000
+
+For PSO/GA:
+java Solver Images/hamburger.png 4 20
 
 The arguments should be entered in the correct order after the executable for the file,
-which is ./main and can be compiled using the included Makefile (simply type make to compile).
-Similarly, type “make clean” to remove all executables created by the make file.
+which is "java Solver" and can be compiled along with all other necessary files by
+typing javac *.java at the command line.
 
-The algorithms are implemented using a large class for the Neural Network and smaller
-classes for input nodes, output nodes, and digit maps, which are the 8x8 or 32x32 map
-and the value they contain.
+The algorithms are implemented using large classes for GA and PSO as well as small helper
+classes for managing triangles, points, particles, neighborhoods, and individuals.
 
-All parameters are set by command line arguments.
-
-There is a test() function in main.cpp that can be used to loop through the different input representations,
-the different output representations, and a variety of learning rates. Due to the small size of the
-problems we were looking at, this testing runs incredibly quickly and is a straightforward way of
-testing a variety of parameters and discovering the optimal parameters.
+Almost all parameters are set by command line arguments. When running GA, the mutation amounts
+are not set via the command line and are found near the top of GA.java.
