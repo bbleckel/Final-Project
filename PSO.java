@@ -213,7 +213,7 @@ public class PSO {
 		int color =  p.position.get(5).intValue();
 		double point = (p.position.get(6))/100;
 
-        GA alg = new GA(individuals, triangles, selection, crossover, pC, pM, generations, file.width, file.height, alpha, color, point);
+        GA alg = new GA(individuals, triangles, selection, crossover, pC, pM, generations, file.width, file.height, alpha, color, point, 1);
 		pVal = alg.solveGA();
         /******************************************************/
 

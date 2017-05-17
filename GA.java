@@ -30,7 +30,10 @@ public class GA {
     BufferedImage bestImg;
     boolean drawIndividuals;
 
-    public GA(int individuals, int triangles, int selection, int crossover, double pC, double pM, int generations, int width, int height, double alphaAmt, int colorAmt, double pointAmt) {
+    // Limit time of generations to 1 minute (0 = no, 1 = yes)
+    int limitTime;
+
+    public GA(int individuals, int triangles, int selection, int crossover, double pC, double pM, int generations, int width, int height, double alphaAmt, int colorAmt, double pointAmt, int limitTime) {
         this.individuals = individuals;
         this.triangles = triangles;
         this.selection = selection;
@@ -38,6 +41,7 @@ public class GA {
         this.pC = pC;
         this.pM = pM;
         this.generations = generations;
+        this.limitTime = limitTime;
 
         imageWidth = width;
         imageHeight = height;
@@ -554,7 +558,7 @@ public class GA {
         // give individuals background colors??
 
         System.out.println("Solving GA...");
-        System.out.println("Solving with:\n" + individuals + " individuals\n" + triangles + " triangles\n" + pC + " pC\n" + pM + " pM\n" + ALPHA_MUT_AMNT + " alpha mutatation amount\n" + MUT_AMNT + " point (x,y) mutation amount\n" + COLOR_MUT_AMNT + " color mutation amount");
+        System.out.println("Solving with:\n" + individuals + " individuals\n" + triangles + " triangles\n" + pC + " pC\n" + pM + " pM\n" + ALPHA_MUT_AMNT + " alpha mutation amount\n" + MUT_AMNT + " point (x,y) mutation amount\n" + COLOR_MUT_AMNT + " color mutation amount");
         double bestValue = -1;
         int genFound = -1;
         initPopulation();
@@ -596,11 +600,13 @@ public class GA {
             }
 
             long totalElapsed = System.currentTimeMillis() - totalStart;
-//            if (totalElapsed/1000 > 60) {
-//                drawBest(bestFitness, g);
-//                System.out.println("Total time restraint hit (" + g + " generations). Returning best: " + fitnessList[bestFitness]);
-//                return 1 - fitnessList[bestFitness];
-//            }
+            if (limitTime == 1) {
+                if (totalElapsed/1000 > 60) {
+                    drawBest(bestFitness, g);
+                    System.out.println("Total time restraint hit (" + g + " generations). Returning best: " + fitnessList[bestFitness]);
+                    return 1 - fitnessList[bestFitness];
+                }
+            }
 
             if((generations - g) % 100 == 0) {
                 // draw current solution

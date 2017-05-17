@@ -7,37 +7,19 @@ public class Solver {
     public static void main (String[] args) {
 
         // process command line arguments
-        if (args.length == 4) {
-            
-        }
-        if (args.length != 8){
-            System.out.println();
+        if (args.length == 3) {
+            String fileName = args[0];
+            int neighborhood = 3;
+            int particles = Integer.parseInt(args[1]);
+            int iterations = Integer.parseInt(args[2]);
 
-            System.out.println("java Solver fileName individuals triangles selection crossover pC pM generations");
-            System.out.println("    fileName     = name of image file to re-create (string)");
-            System.out.println("    individuals  = number of individuals in population (int)");
-            System.out.println("    triangles    = number of triangles allotted to each individual (int)");
-            System.out.println("    selection    = type of selection to use (int):");
-            System.out.println("                     1     = tournament selection");
-            System.out.println("                     2     = Boltzmann selection");
-//            System.out.println("                            ts1 = same individual cannot compete against self");
-//            System.out.println("                            ts2 = same individual can compete against self");
-//            System.out.println("                     rs   = rank based selection");
-//            System.out.println("                     bs   = Boltzmann selection");
-//            System.out.println("    elitism      = use of elitism (string):");
-//            System.out.println("                     et   = use elitism");
-//            System.out.println("                     ef   = do not use elitism");
-            System.out.println("    crossover    = crossover method (int):");
-//            System.out.println("                     1c   = 1-point crossover");
-//            System.out.println("                     2c   = 2-point crossover");
-            System.out.println("                        1   = uniform crossover");
-            System.out.println("    pC           = crossover probability (double)");
-            System.out.println("    pM           = mutation probability (double)");
-            System.out.println("    generations  = max number of generations to run (int)");
-//            System.out.println("    disInterval  = show best interval (int)");
-            System.out.println();
-            System.exit(1); // prevent the program from continuing without the correct inputs
-        } else {
+            System.out.println("fileName = " + fileName);
+            file = new FileReader(fileName);
+            pixels = file.pixels;
+
+            PSO alg = new PSO(neighborhood, particles, iterations, fileName);
+            Vector<Double> results = alg.solvePSO();
+        } else  if (args.length == 8) {
             String fileName = args[0];
             int individuals = Integer.parseInt(args[1]);
             int triangles = Integer.parseInt(args[2]);
@@ -51,23 +33,32 @@ public class Solver {
             file = new FileReader(fileName);
             pixels = file.pixels;
 
-            // System.out.println("Solving with:\n" + individuals + " individuals\n" + triangles + " triangles\n" + pC + " pC\n" + pM + " pM\n" + generations + " generations\n");
+            GA alg = new GA(individuals, triangles, selection, crossover, pC, pM, generations, file.width, file.height, 0.1, 15, 0.2, 0);
+            alg.solveGA();
+        } else if (args.length != 8){
+            System.out.println();
 
-            // GA alg = new GA(individuals, triangles, selection, crossover, pC, pM, generations, file.width, file.height, 0.1, 15, 20);
-            // alg.solveGA();
+            System.out.println("For just running the GA:");
+            System.out.println("java Solver fileName individuals triangles selection crossover pC pM generations");
+            System.out.println("    fileName     = name of image file to re-create (string)");
+            System.out.println("    individuals  = number of individuals in population (int)");
+            System.out.println("    triangles    = number of triangles allotted to each individual (int)");
+            System.out.println("    selection    = type of selection to use (int):");
+            System.out.println("                     1     = tournament selection");
+            System.out.println("                     2     = Boltzmann selection");
+            System.out.println("    crossover    = crossover method (int):");
+            System.out.println("                        1   = uniform crossover");
+            System.out.println("    pC           = crossover probability (double)");
+            System.out.println("    pM           = mutation probability (double)");
+            System.out.println("    generations  = max number of generations to run (int)");
+            System.out.println();
 
-            PSO alg = new PSO(3, 20, 50, fileName);
-            Vector<Double> results = alg.solvePSO();
-
-
-//            System.out.println("Found " + pixels.length * pixels[0].length + " pixels");
-
-            //            for(int i = 0; i < pixels.length; i++) {
-            //                for(int j = 0; j < pixels[i].length; j++) {
-            //                    System.out.println(pixels[i][j]);
-            //                }
-            //            }
-
+            System.out.println("For running the PSO on the GA:");
+            System.out.println("java Solver fileName particles iterations");
+            System.out.println("    fileName     = name of image file to re-create (string)");
+            System.out.println("    particles    = number of particles in swarm (int)");
+            System.out.println("    iterations   = number of iterations for the PSO to run (int)");
+            System.exit(1); // prevent the program from continuing without the correct inputs
         }
     } // end main
 }
