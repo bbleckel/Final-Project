@@ -197,6 +197,7 @@ public class PSO {
     }
 
 	/* function evaluation */
+    /* this is where the GA gets called */
 	public void eval(int index) {
         //save the particle that we're looking at
     	Particle p = swarm.get(index);
@@ -204,14 +205,6 @@ public class PSO {
 
         /******************************************************/
         /* CALL GA HERE AND RETURN VALUE THAT YOU GET TO PVAL */
-        /******************************************************/
-		// individuals
-        // triangles
-        // pC
-        // pM
-        // alpha mutate amount
-        // color mutate amount
-        // point (x,y) mutate amount
 		int individuals = p.position.get(0).intValue();
 		int triangles = p.position.get(1).intValue();
 		double pC = (p.position.get(2))/100;
@@ -219,10 +212,10 @@ public class PSO {
 		double alpha = (p.position.get(4))/100;
 		int color =  p.position.get(5).intValue();
 		double point = (p.position.get(6))/100;
-		// System.out.println("Calling GA with individuals: " + individuals + ", triangles: " + triangles + ", pC: " + pC + ", pM: " + pM + ", alpha: " + alpha + ", color: " + color + ", point: " + point);
-        GA alg = new GA(individuals, triangles, selection, crossover, pC, pM, generations, file.width, file.height, alpha, color, point);
 
+        GA alg = new GA(individuals, triangles, selection, crossover, pC, pM, generations, file.width, file.height, alpha, color, point);
 		pVal = alg.solveGA();
+        /******************************************************/
 
     	//update the personal best value if necessary
     	if (pVal < p.pBestValue) {
@@ -275,19 +268,12 @@ public class PSO {
     			eval(i);
     		}
 
-    		// if (neighborhood == RANDOM_NEIGHBORHOOD_INT) {
-    			updateRandomNeighborhood();
-    		// }
-    		// when testing a single input, use this
-    		// cout << "gBest = " << gBestValue << endl;
+			updateRandomNeighborhood();
 			System.out.println("gBest = " + (1 - gBestValue) + " iteration " + (iterations - iterRemaining) + " \n");
 			vect.add(gBestValue);
 
     		iterRemaining--;
     	}
-
-    	// when running the test cases, use this
-    	//cout << "gBest = " << gBestValue << endl;
 
     	return vect;
     }

@@ -7,6 +7,9 @@ public class Solver {
     public static void main (String[] args) {
 
         // process command line arguments
+        if (args.length == 4) {
+            
+        }
         if (args.length != 8){
             System.out.println();
 
