@@ -31,6 +31,7 @@ public class GA {
     boolean drawIndividuals;
 
     // Limit time of generations to 1 minute (0 = no, 1 = yes)
+    // This is set to 1 if PSO is running, and 0 if GA by itself is running
     int limitTime;
 
     public GA(int individuals, int triangles, int selection, int crossover, double pC, double pM, int generations, int width, int height, double alphaAmt, int colorAmt, double pointAmt, int limitTime) {

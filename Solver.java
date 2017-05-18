@@ -9,7 +9,6 @@ public class Solver {
         // process command line arguments
         if (args.length == 3) {
             String fileName = args[0];
-            int neighborhood = 3;
             int particles = Integer.parseInt(args[1]);
             int iterations = Integer.parseInt(args[2]);
 
@@ -17,7 +16,7 @@ public class Solver {
             file = new FileReader(fileName);
             pixels = file.pixels;
 
-            PSO alg = new PSO(neighborhood, particles, iterations, fileName);
+            PSO alg = new PSO(particles, iterations, fileName);
             Vector<Double> results = alg.solvePSO();
         } else  if (args.length == 8) {
             String fileName = args[0];

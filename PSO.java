@@ -20,7 +20,6 @@ public class PSO {
 
 	private final static double constrict = 0.7298;
 	private double nBest;
-	private int neighborhood;
 	private Vector<Particle> swarm;
 
     /****   Dimension order:
@@ -58,8 +57,7 @@ public class PSO {
 	private static String fileName;
 	private static FileReader file;
 
-    public PSO(int neighborhood, int swarmSize, int iterations, String fileName) {
-        this.neighborhood = neighborhood;
+    public PSO(int swarmSize, int iterations, String fileName) {
     	this.swarmSize = swarmSize;
     	this.iterations = iterations;
     	this.dimension = 7;
@@ -129,12 +127,6 @@ public class PSO {
 
 	/* neighborhoods */
 	public void initializeNeighborhoods() {
-		initializeRandomNeighborhood();
-    }
-	// public void global();
-	// public void ring();
-	// public void vonNeumann();
-	public void initializeRandomNeighborhood() {
         int k = 5;
 
         for (int i = 0; i < swarmSize; i++) {
@@ -274,6 +266,14 @@ public class PSO {
 
     		iterRemaining--;
     	}
+
+        // print for results in LaTex format
+        System.out.println();
+        System.out.println("\\begin{filecontents*}{data1.txt}");
+        for (int i = 0; i < vect.size(); i++) {
+            System.out.println("\t" + i + " " + (1-vect.get(i)));
+        }
+        System.out.println("\\end{filecontents*}");
 
     	return vect;
     }

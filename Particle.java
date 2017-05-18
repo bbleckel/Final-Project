@@ -55,9 +55,9 @@ public class Particle {
     	ID = IDCounter;
     	IDCounter++;
 
+        //initialize vectors
         velocity = new Vector<Double>(0);
     	position = new Vector<Double>(0);
-
     	pBest = new Vector<Double>(0);
 
     	for (int i = 0; i < dimension; i++) {
