@@ -1,9 +1,9 @@
-Final Project - PSO/GA for Image Reproduction
+# Final Project - PSO/GA for Image Reproduction
 By: Bo Bleckel, Jasper Houston, and Dylan Parsons
 Nature Inspired Computation - CSCI 3445
 Bowdoin College
 
-/* This program is implemented in Java */
+#### This program is implemented in Java
 
 This program uses Particle Swarm Optimization (PSO) to optimize the parameters on a
     Genetic Algorithm (GA) performing Image Reproduction (IR).
@@ -13,6 +13,7 @@ A detailed explanation of image reproduction, PSO, GAs, our methods, and our res
 The Solver.java deals with parsing the command line and calling either PSO or GA.
 The command line arguments are as follows, in the order presented:
 
+### Instructions
 For just running the GA:
 java Solver fileName individuals triangles selection crossover pC pM generations
     fileName     = name of image file to re-create (string)
@@ -27,6 +28,7 @@ java Solver fileName individuals triangles selection crossover pC pM generations
     pM           = mutation probability (double)
     generations  = max number of generations to run (int)
 
+### Examples
 For running the PSO on the GA:
 java Solver fileName particles iterations
     fileName     = name of image file to re-create (string)
