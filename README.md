@@ -3,6 +3,8 @@ By: Bo Bleckel, Jasper Houston, and Dylan Parsons
 Nature Inspired Computation - CSCI 3445
 Bowdoin College
 
+Writeup can be found at [GA-PSO.pdf](GA-PSO.pdf)
+
 #### This program is implemented in Java
 
 This program uses Particle Swarm Optimization (PSO) to optimize the parameters on a
